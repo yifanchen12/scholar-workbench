@@ -8,9 +8,9 @@
 | `tests/digits.test.cjs` | 200 exported JS/Python probability comparisons / 导出概率参考比较 | Node |
 | `tests/metrics.test.cjs` | 624 classification-metric reference matrices / 指标参考矩阵 | Node |
 | `tests/cards.test.cjs`, `state-integrity.test.cjs`, `backup-size.test.cjs` | Parsing, state integrity and backup limits / 解析、状态与备份边界 | Node |
-| `tests/server.test.cjs`, `textbook-api.test.cjs` | Static allowlist, headers, local origin, schema and mocked provider protocol / 本机服务与模拟协议 | Running local server / 已启动服务 |
+| `tests/server.test.cjs`, `textbook-api.test.cjs` | Static allowlist, headers, local origin, schema, default/custom Base URL, synthetic gateway transport and rejected redirects / 本机服务、默认/自定义地址、模拟网关与重定向阻断 | Running local server / 已启动服务 |
 | `tests/launcher.test.cjs` | Windows launcher and port behavior / Windows 启动及端口 | Windows, Node |
-| `tests/workspace-v2.test.cjs` | Real Chinese PDF extraction; course state/tools; synthetic attachments; CSV safety; byte-preserving backup; invalid-input rejection; migration; 24 layouts / PDF、课程、附件、备份、迁移、布局 | Local server, Playwright, Chromium/Edge |
+| `tests/workspace-v2.test.cjs` | Real Chinese PDF extraction; course state/tools; memory-only Base URL; synthetic attachments; CSV safety; byte-preserving backup; invalid-input rejection; migration; 24 layouts / PDF、课程、附件、备份、迁移、布局 | Local server, Playwright, Chromium/Edge |
 | `practice/test_math_lab.py` | Standard-library numerical/gradient checks / 标准库数值与梯度 | Python |
 | `tests/tiny_llm.test.py` | Causal attention, SFT mask, frozen DPO reference, LoRA invariants, checkpoint equality, exact CPU resume / 训练机制与 CPU 恢复 | Python, PyTorch |
 | `scripts/audit-public.py` | Tracked-file publication exclusions and credential-pattern scan, including ZIP entries / 公开文件排除与模式扫描 | Python, Git |

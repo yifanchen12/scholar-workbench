@@ -29,12 +29,14 @@ Maintainers aim to acknowledge and reproduce a report, discuss a correction priv
 | --- | --- | --- |
 | Local HTTP service | Binds to IPv4 loopback; static path allowlist; GET/HEAD for static files; restricted API route | No authentication; other local programs can contact it. |
 | Browser API calls | Exact local Host/Origin checks, JSON content type, body cap and timeout | Local non-browser software can forge Origin. This does not protect against a compromised host or malicious browser extension. |
-| Provider | Fixed HTTPS destination; no caller-controlled proxy URL; key excluded from prompts/logging | The key travels over loopback HTTP before provider HTTPS and remains visible to the page/process during the call. Provider processing is external. |
+| Provider | User-selected HTTP(S) Base URL; credentials/query/fragments rejected; redirects not followed; key excluded from prompts/logging | No destination allowlist: campus/private addresses are intentionally reachable. The chosen endpoint receives the key/text; HTTP is plaintext. The key remains visible to the page/process during the call. |
 | Generated content | Typed schema, finite numeric checks, page-range validation, escaped text; no execution of generated code | Prompt injection and factual errors remain possible. Validation is not a correctness guarantee. |
 | Browser UI | Content Security Policy, no remote scripts, frame/object restrictions and `nosniff` | CSP is defense in depth, not complete XSS protection. Inline styles are permitted. |
 | Files and backups | Size limits, structural/reference validation, atomic IndexedDB replacement transaction | Backups are plaintext. Quotas, storage clearing and multi-window conflicts can cause loss. There is no malware scanner. |
 
-Keys are kept in page memory and individual requests, not localStorage, IndexedDB or exported backups. The application does not intentionally log keys, textbook content or proof files. Activity evidence is not sent to DeepSeek. Treat any exported backup as confidential if its contents are confidential.
+Keys are kept in page memory and individual requests, not localStorage, IndexedDB or exported backups. The application does not intentionally log keys, textbook content or proof files. Activity evidence is not sent to the configured API. Treat any exported backup as confidential if its contents are confidential.
+
+The Base URL is a user-controlled outbound destination, not a fixed-domain proxy. Configure only a service you trust to receive the key and selected text. HTTPS is preferred; HTTP is available for trusted local/campus gateways. The existing origin checks do not constitute a general SSRF defense, and local programs that can forge Origin can direct requests to reachable hosts. No TLS verification bypass is provided. If an endpoint redirects, use its final address rather than forwarding credentials automatically.
 
 PDF parsing uses vendored PDF.js. Dependencies retain their upstream notices and can have their own vulnerabilities. Update reviewed vendor versions deliberately; do not assume the bundled version is always current. Use a maintained Node.js release and browser. Downloaded evidence should be opened with appropriate local software; accepting a file does not establish its safety.
 

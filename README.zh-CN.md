@@ -10,7 +10,7 @@
 
 | 模块 | 已实现 | 使用边界 |
 | --- | --- | --- |
-| PDF 教材 | 本地解析，目录识别，章节概念/步骤/对照/图表/自测，物理页码引用，Markdown 导出 | AI 生成需要自己的 DeepSeek 账户；扫描件需先 OCR；公式与排版须核对原文 |
+| PDF 教材 | 本地解析，目录识别，章节概念/步骤/对照/图表/自测，物理页码引用，Markdown 导出 | AI 生成需要自己的兼容 API 账户（DeepSeek 或学校接口）；扫描件需先 OCR；公式与排版须核对原文 |
 | AI 专业学习 | 8 阶段、43 课：数学/Python、经典 ML、深度学习、Transformer、预训练、后训练、评估/RAG/部署、项目 | 自编学习路线，不能代替完整学历课程；部分工程主题为原理和作业 |
 | 训练实训 | PyTorch 小型 Decoder：预训练、SFT、LoRA、DPO、统一评估、生成、预训练恢复 | 默认 CPU 教学规模；生产大模型、多卡与 CUDA 未验收 |
 | 综测记录 | 活动、举办单位、奖级、日期、分类、贡献与真实文件/照片；检索、编辑、CSV | 记录证据，不自动计算或认定官方综测分值 |
@@ -43,14 +43,24 @@ node server.js
 ## 上传教材与生成展示
 
 1. 导入带文字层的 PDF，原文件与提取文字存入本机浏览器 IndexedDB。
-2. 填写自己的 DeepSeek API 密钥及账户可用的模型名称。点击生成才调用，费用由该账户承担。
+2. 填写服务商或学校提供的 Base URL、API 密钥与模型名称。点击生成才调用，费用由该账户承担。
 3. 生成目录会发送每页首 120、尾 60 个 JavaScript 字符的节选，不等同于完整审读全书。
 4. 选择章节或物理页码生成展示。单次最多 40 页、100,000 个 JavaScript 字符；长章分段。
 5. 对照 PDF 核查公式、例题、图表、答案；可展开提取文字、保存展示与导出 Markdown。
 
-密钥只在页面内存与单次请求中使用，刷新即清除，不写入持久存储或备份。选定文字、书名和学习目标经本地代理发送至固定的 [DeepSeek HTTPS 接口](https://api-docs.deepseek.com/api/create-chat-completion/)。目录发送节选，章节发送所选页全文；综测证明、课程笔记及其他记录不发送。第三方处理受其政策约束，发送前应确认教材使用权限。
+连接信息与密钥只在页面内存与请求中使用，刷新恢复默认，不写入持久存储或备份。选定文字、书名和学习目标经本机代理发送至 Base URL 指定的接口；默认是 [DeepSeek](https://api-docs.deepseek.com/api/create-chat-completion/)，也支持兼容的学校接口。目录发送节选，章节发送所选页全文；综测证明、课程笔记及其他记录不发送。第三方处理受其政策约束，发送前应确认教材使用权限。
 
 密码 PDF 先解密，扫描 PDF 先 OCR。双栏顺序、数学符号、图片和公式可能提取不完整。引用页码从 PDF 第一页计数，不是印刷页码。结构与引用范围校验不能证明 AI 内容正确。无密钥时仍可本地阅读，不生成虚构结果。
+
+Base URL 填写示例（学校域名为演示，请替换为学校提供的地址）：
+
+| 输入 | 实际请求地址 |
+| --- | --- |
+| `https://api.deepseek.com` | `https://api.deepseek.com/chat/completions` |
+| `https://ai.example.org/campus/v1/` | `https://ai.example.org/campus/v1/chat/completions` |
+| `https://ai.example.org/v1/chat/completions` | 直接使用，不重复拼接 |
+
+接口须兼容 Bearer 认证、非流式 Chat Completions、`response_format: {"type":"json_object"}` 和所需输出 token 预算。模型 ID 按学校提供填写，支持 `/`、`:`。需要校园网/VPN 时先连接。地址只能用 HTTP(S)，不得含账号密码、查询参数或片段。优先 HTTPS；HTTP 会明文发送密钥与教材文字，仅用于明确可信的本机/校园接口。不跟随重定向，请直接填写最终地址。接收数据与密钥的是所选服务，不一定是 DeepSeek。
 
 ## AI 训练实训
 
@@ -114,7 +124,7 @@ node tests/workspace-v2.test.cjs
 ## 目录与维护
 
 ```text
-server.js / deepseek-api.js       本机服务与固定 API 代理
+server.js / deepseek-api.js       本机服务与可配置 API 代理
 textbook*.js / vendor/pdfjs/      教材解析、校验与展示
 curriculum*.js / training*.js    自编课程、工具与实际 CPU 记录
 records.js / vault.js             综测附件、持久存储与备份

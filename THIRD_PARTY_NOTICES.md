@@ -33,6 +33,6 @@ The shipped exercise PDFs contain original educational text and subset-embedded 
 
 ## Optional tools and external services
 
-PyTorch, scikit-learn, Playwright and PDF-building tools are optional development/practice dependencies, not part of the application's installed runtime. Their upstream licenses apply when installed. DeepSeek is an external service accessed with the user's credentials; its account terms, billing and privacy policies are independent of this repository's license. Linked papers and courses are references, not republished course contents.
+PyTorch, scikit-learn, Playwright and PDF-building tools are optional development/practice dependencies, not part of the application's installed runtime. Their upstream licenses apply when installed. DeepSeek or a user-configured compatible school/provider gateway is an external service accessed with the user's credentials; its account terms, billing and privacy policies are independent of this repository's license. Linked papers and courses are references, not republished course contents.
 
-PyTorch、scikit-learn、Playwright、PDF 构建工具为可选开发/实训依赖，不是主应用必装运行包；安装后适用各自上游许可。DeepSeek 的账户、费用与隐私政策独立于项目许可。论文与课程链接仅为参考，不是全文再分发。
+PyTorch、scikit-learn、Playwright、PDF 构建工具为可选开发/实训依赖，不是主应用必装运行包；安装后适用各自上游许可。DeepSeek 或用户配置的学校/服务商接口，其账户、费用与隐私政策独立于项目许可。论文与课程链接仅为参考，不是全文再分发。

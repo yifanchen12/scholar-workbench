@@ -35,6 +35,6 @@ server.on('error',e=>{
   check.setTimeout(1500,()=>check.destroy(new Error('Local identity check timed out.')));check.on('error',occupied);check.end();
 });
 server.listen(port,'127.0.0.1',()=>{
-  console.log(`邮研学习工作台 · ${url}\nLocal only. Ctrl+C to stop. PDF and evidence stay in this browser. Selected textbook text is sent to DeepSeek only when generating.`);
+  console.log(`邮研学习工作台 · ${url}\nLocal only. Ctrl+C to stop. PDF and evidence stay in this browser. Selected textbook text is sent to your configured API only when generating.`);
   openBrowser();
 });

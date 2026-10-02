@@ -10,7 +10,7 @@ This independent educational project grew out of university AI study needs. It h
 
 | Area | Implemented | Boundary |
 | --- | --- | --- |
-| PDF learning | Local extraction; generated outlines, concepts, steps, comparisons, charts and quizzes; physical-page citations; Markdown export | Generation requires your DeepSeek account. Scans need external OCR. Verify formulas and answers against the PDF. |
+| PDF learning | Local extraction; generated outlines, concepts, steps, comparisons, charts and quizzes; physical-page citations; Markdown export | Generation requires your own compatible API account (DeepSeek or a school gateway). Scans need external OCR. Verify formulas and answers against the PDF. |
 | AI curriculum | 8 stages, 43 lessons: mathematics/Python, classical ML, deep learning, Transformers, pretraining, post-training, evaluation/RAG/deployment and projects | An authored study path, not a full degree program. Some engineering topics provide explanations and assignments rather than implemented systems. |
 | Training practice | Tiny PyTorch Decoder with pretraining, SFT, LoRA, DPO, comparable evaluation, generation and pretraining resume | CPU teaching scale. Production LLM training, distributed execution and CUDA are not validated. |
 | Activity evidence | Activity, organizer, award level, date, category, contribution and actual document/photo attachments; search, editing, CSV | Evidence tracking without automatic official credit calculation. |
@@ -43,14 +43,24 @@ Use one stable browser origin. `file:`, `localhost`, `127.0.0.1` and different p
 ## Learn from a PDF
 
 1. Import a PDF with a text layer. The original and extracted text remain in browser IndexedDB.
-2. Enter your DeepSeek key and a model identifier available to your account. Calls occur only when you request generation and are billed to that account.
+2. Enter the Base URL, API key and model identifier supplied by your provider or school. Calls occur only when you request generation and are billed to that account.
 3. Generate an outline. This sends the first 120 and last 60 JavaScript characters per page, not a full review of the book.
 4. Select a chapter or physical page range. A lesson request is limited to 40 pages and 100,000 JavaScript characters; split longer chapters.
 5. Check explanations, formulas and answers against the PDF; inspect extracted text, save lessons or export Markdown.
 
-The key is held in page memory and the individual request, cleared on refresh and excluded from persistence and backups. Selected text, book title and learning goal pass through the local server to a fixed [DeepSeek HTTPS endpoint](https://api-docs.deepseek.com/api/create-chat-completion/). Outlines send excerpts; lessons send selected pages' full extracted text. Activity attachments, course notes and unrelated records are not sent. Provider handling is governed by its policies; check that you are permitted to transmit textbook content.
+Connection settings and the key are held in page memory, reset on refresh and excluded from persistence and backups. Selected text, book title and learning goal pass through the local server to the endpoint selected by the Base URL. The default is [DeepSeek](https://api-docs.deepseek.com/api/create-chat-completion/); compatible school gateways are supported. Outlines send excerpts; lessons send selected pages' full extracted text. Activity attachments, course notes and unrelated records are not sent. Provider handling is governed by its policies; check that you are permitted to transmit textbook content.
 
 Decrypt password-protected PDFs and OCR scans first. Extraction can lose symbols, images and column order. Page references count physical PDF pages from the first page, not printed page labels. Schema and citation-range validation do not prove factual correctness. Without a key, local reading remains available and generation does not fabricate success.
+
+Base URL examples (replace the illustrative school domain with the address supplied by your school):
+
+| Input | Requested endpoint |
+| --- | --- |
+| `https://api.deepseek.com` | `https://api.deepseek.com/chat/completions` |
+| `https://ai.example.org/campus/v1/` | `https://ai.example.org/campus/v1/chat/completions` |
+| `https://ai.example.org/v1/chat/completions` | Used directly |
+
+The gateway must support Bearer authentication, non-streaming Chat Completions, `response_format: {"type":"json_object"}`, and the requested output-token budget. Enter the school-provided model ID, including `/` or `:` if present. Connect the required campus network/VPN before generating. URLs must use HTTP(S), without embedded credentials, query parameters or fragments. Prefer HTTPS; HTTP sends keys and textbook text unencrypted and is intended only for explicitly trusted local/campus gateways. Automatic redirects are rejected: enter the final endpoint directly. The selected service, rather than necessarily DeepSeek, receives the data and credentials.
 
 ## Reproduce training
 
@@ -114,7 +124,7 @@ Build portable archives with `python scripts/package-workbench.py`, then verify 
 ## Project layout and maintenance
 
 ```text
-server.js / deepseek-api.js       Loopback server and fixed API proxy
+server.js / deepseek-api.js       Loopback server and configurable API proxy
 textbook*.js / vendor/pdfjs/      PDF extraction, validation and display
 curriculum*.js / training*.js    Authored lessons, tools and recorded CPU run
 records.js / vault.js             Activity attachments, persistence and backup

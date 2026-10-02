@@ -1,9 +1,18 @@
 'use strict';
 const schema=require('./textbook-schema.js');
 const LIMIT=2*1024*1024;
+function chatEndpoint(baseUrl='https://api.deepseek.com'){
+  if(typeof baseUrl!=='string'||!/^https?:\/\//i.test(baseUrl.trim())||baseUrl.length>2048||/[\u0000-\u001f\u007f]/.test(baseUrl))throw new Error('Base URL 无效，请填写完整的 HTTP(S) 接口地址。');
+  let url;try{url=new URL(baseUrl.trim());}catch{throw new Error('Base URL 无效，请填写完整的 HTTP(S) 接口地址。');}
+  if(!['https:','http:'].includes(url.protocol)||!url.hostname||url.username||url.password||baseUrl.includes('?')||baseUrl.includes('#'))throw new Error('Base URL 仅支持 HTTP(S)，不能包含账号、密码、查询参数或片段。');
+  const path=url.pathname.replace(/\/+$/,'');
+  url.pathname=path.endsWith('/chat/completions')?path:path+'/chat/completions';
+  return url.href;
+}
 function validateInput(input){
-  if(!input||!['outline','lesson'].includes(input.kind)||typeof input.key!=='string'||!input.key.trim()||input.key.length>256||/[\r\n]/.test(input.key))throw new Error('请在页面填写有效的 DeepSeek API 密钥。');
-  if(typeof input.model!=='string'||! /^[\w.-]{1,80}$/.test(input.model))throw new Error('模型名称无效。');
+  if(!input||!['outline','lesson'].includes(input.kind)||typeof input.key!=='string'||!input.key.trim()||input.key.length>256||/[\r\n]/.test(input.key))throw new Error('请在页面填写所选接口的有效 API 密钥。');
+  chatEndpoint(input.baseUrl);
+  if(typeof input.model!=='string'||!input.model.trim()||input.model.length>160||/[\u0000-\u001f\u007f]/.test(input.model))throw new Error('模型名称无效。');
   if(typeof input.title!=='string'||input.title.length>300||typeof input.goal!=='string'||input.goal.length>1000)throw new Error('教材名称或学习目标过长。');
   if(!Array.isArray(input.pages)||!input.pages.length||input.pages.length>1000)throw new Error('教材页数无效。');
   const seen=new Set();let size=0;
@@ -18,8 +27,9 @@ function prompt(kind){
 }
 async function generate(input,fetcher=fetch,signal){
   validateInput(input);
-  const response=await fetcher('https://api.deepseek.com/chat/completions',{method:'POST',signal,headers:{'Content-Type':'application/json','Authorization':'Bearer '+input.key.trim()},body:JSON.stringify({model:input.model,messages:[{role:'system',content:prompt(input.kind)},{role:'user',content:JSON.stringify({title:input.title,goal:input.goal,pages:input.pages})}],response_format:{type:'json_object'},max_tokens:input.kind==='outline'?7000:11000,stream:false})});
-  if(!response.ok){const hints={401:'密钥无效',402:'账户余额不足',429:'请求过于频繁',503:'服务暂不可用'};const error=new Error(`DeepSeek 请求失败（${response.status}）：${hints[response.status]||'请核对模型名称并稍后重试'}。`);error.status=502;throw error;}
+  const response=await fetcher(chatEndpoint(input.baseUrl),{method:'POST',signal,redirect:'manual',headers:{'Content-Type':'application/json','Authorization':'Bearer '+input.key.trim()},body:JSON.stringify({model:input.model.trim(),messages:[{role:'system',content:prompt(input.kind)},{role:'user',content:JSON.stringify({title:input.title,goal:input.goal,pages:input.pages})}],response_format:{type:'json_object'},max_tokens:input.kind==='outline'?7000:11000,stream:false})});
+  if(response.status>=300&&response.status<400){await response.body?.cancel();throw new Error('API 地址发生重定向，请填写最终 Base URL；未向重定向地址转发密钥。');}
+  if(!response.ok){const hints={401:'密钥无效',402:'账户余额不足',429:'请求过于频繁',503:'服务暂不可用'};const error=new Error(`API 请求失败（${response.status}）：${hints[response.status]||'请核对 Base URL、模型名称与接口兼容性后重试'}。`);error.status=502;throw error;}
   const raw=await response.text();if(raw.length>1024*1024)throw new Error('API返回过大，已拒绝。');
   let envelope;try{envelope=JSON.parse(raw);}catch{throw new Error('API未返回有效JSON。');}
   const choice=envelope.choices?.[0];if(choice?.finish_reason!=='stop')throw new Error('生成未完整结束，请缩小页码范围后重试。');
@@ -33,7 +43,7 @@ async function handle(req,res,origin){
   if(req.headers.origin!==origin||req.headers.host!==new URL(origin).host||req.headers['content-type']!=='application/json')return send(403,{error:'只接受工作台本地页面的JSON请求。'});
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),180000);res.on('close',()=>controller.abort());
   try{let size=0,chunks=[];for await(const chunk of req){size+=chunk.length;if(size>LIMIT){send(413,{error:'请求过大，请缩小教材范围。'});return;}chunks.push(chunk);}let input;try{input=JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{throw new Error('请求JSON无效。');}send(200,await generate(input,fetch,controller.signal));}
-  catch(error){send(error.status||400,{error:controller.signal.aborted?'请求超时或已取消，请缩小页码范围后重试。':error instanceof TypeError?'无法连接 DeepSeek，请检查网络后重试。':error.message});}
+  catch(error){send(error.status||400,{error:controller.signal.aborted?'请求超时或已取消，请缩小页码范围后重试。':error instanceof TypeError?'无法连接 API，请检查 Base URL、网络及学校接口所需的 VPN 后重试。':error.message});}
   finally{clearTimeout(timer);}
 }
-module.exports={handle,generate,validateInput};
+module.exports={handle,generate,validateInput,chatEndpoint};

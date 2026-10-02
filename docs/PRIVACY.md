@@ -8,7 +8,7 @@ This describes the repository's implementation, not a provider's privacy contrac
 | --- | --- | --- |
 | Tasks, cards, sessions, legacy experiences/drafts / 基础记录 | Browser localStorage, `youyan.study.v1` | No application upload / 应用不上传 |
 | Books, extracted text, generated lessons, activity records/files, course progress/notes / 教材、综测与课程数据 | Browser IndexedDB, `youyan.workspace.v2` | Only the requested textbook text/metadata below / 仅下述请求的教材文字与元数据 |
-| API key / API 密钥 | Page memory, request, Node process during call / 页面及调用过程内存 | DeepSeek authentication over HTTPS, via loopback HTTP / 经本机 HTTP 代理，通过 HTTPS 用于认证 |
+| Base URL, model and API key / 连接信息与密钥 | Page memory, request, Node process during call / 页面及调用过程内存 | User-selected API; HTTPS preferred, HTTP allowed / 用户指定 API，优先 HTTPS，也允许 HTTP |
 | Imported training report / 导入训练报告 | Page memory / 页面内存 | None / 不发送 |
 | Python outputs / Python 输出 | Local files under the selected output directory / 指定目录的本机文件 | No script upload / 脚本不上传 |
 | Full backup / 完整备份 | Downloaded plaintext JSON with Base64 file bytes / 下载的明文 JSON | Wherever the user sends the file / 由使用者决定文件去向 |
@@ -24,22 +24,22 @@ PDF -> local PDF.js -> browser IndexedDB
                          |
                   user requests generation
                          |
-           selected text + title + goal + key
+           selected text + title + goal + key + baseUrl
                          |
             HTTP 127.0.0.1 /api/textbook
                          |
-          HTTPS api.deepseek.com/chat/completions
+          user-selected HTTP(S) .../chat/completions
                          |
           typed validation -> escaped display -> IndexedDB
 ```
 
-An outline request includes page-numbered first-120/last-60-character excerpts from each page. A lesson request includes full extracted text from selected pages, physical page numbers, book title and learning goal. The key is in the authorization header of the provider request, not the prompt. The provider also receives ordinary network/account metadata and applies its own retention and processing policies; the project cannot promise zero retention or delete provider-held copies.
+An outline request includes page-numbered first-120/last-60-character excerpts from each page. A lesson request includes full extracted text from selected pages, physical page numbers, book title and learning goal. The key is in the authorization header of the provider request, not the prompt. The destination is selected by the user (default: `https://api.deepseek.com`); compatible campus endpoints, including private addresses, are supported. HTTP exposes the request in plaintext; HTTPS is preferred, and redirects are not followed. Connection settings reset on refresh and are not saved to backups. The selected provider also receives ordinary network/account metadata and applies its own retention and processing policies; the project cannot promise zero retention or delete provider-held copies.
 
-目录请求包含逐页物理页码及首 120/尾 60 字符节选；章节请求包含所选页全文、页码、书名、学习目标。密钥用于服务商请求的认证头，不在提示词正文。服务商还会接收通常的网络/账户元数据，并按自己的政策处理；本项目不能承诺其零留存，也不能删除其已保存的副本。
+目录请求包含逐页物理页码及首 120/尾 60 字符节选；章节请求包含所选页全文、页码、书名、学习目标。密钥用于服务商请求的认证头，不在提示词正文。目标由使用者指定（默认 `https://api.deepseek.com`），支持兼容校园接口与私网地址；HTTP 明文传输，优先 HTTPS，不跟随重定向。连接信息刷新恢复默认，不进入备份。所选服务商还会接收通常的网络/账户元数据，并按自己的政策处理；本项目不能承诺其零留存，也不能删除其已保存的副本。
 
-The shipped application has no analytics SDK or remote script loading. Ordinary use does not contact DeepSeek automatically. Clicking an external documentation link opens the external site, which has its own policies. Browser extensions, operating-system backup/sync and user-initiated sharing are outside application control.
+The shipped application has no analytics SDK or remote script loading. Ordinary use does not contact a model provider automatically. Clicking an external documentation link opens the external site, which has its own policies. Browser extensions, operating-system backup/sync and user-initiated sharing are outside application control.
 
-应用不含统计 SDK 或远程脚本，普通操作不会自动联系 DeepSeek。点击外部文档链接后适用该网站政策。扩展、系统备份/同步及使用者主动分享不由应用控制。
+应用不含统计 SDK 或远程脚本，普通操作不会自动联系模型服务商。点击外部文档链接后适用该网站政策。扩展、系统备份/同步及使用者主动分享不由应用控制。
 
 ## Backup, removal and repository publication / 备份、删除与公开仓库
 
