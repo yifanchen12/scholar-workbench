@@ -64,6 +64,8 @@ Base URL 填写示例（学校域名为演示，请替换为学校提供的地�
 
 若连接报错包含 `EACCES/EPERM`，说明本机策略禁止 Node.js 进程联网。停止该服务，在普通终端运行 `node server.js`，或允许该进程对外联网。这类失败发生在收到 API HTTP 响应之前，不能判断密钥或模型是否有效。未认证请求返回 `401` 只说明地址可达，不代表带真实密钥的生成已成功。
 
+生成请求没有工作台设置的等待期限或响应空闲超时，学校接口慢时会持续等待，保持页面与服务开启即可。点击“取消生成”或关闭浏览器连接才会停止本机待处理请求，不自动重试。学校网关仍可能返回自身超时错误或断开连接；页面会区分说明，移除本机期限不能阻止外部服务断开。
+
 ## AI 训练实训
 
 基础 Python 实验使用标准库；小型语言模型要求 **Python 3.10+、PyTorch 2.2+**。建议使用独立虚拟环境，按 [PyTorch 官方安装页](https://pytorch.org/get-started/locally/) 选择适合操作系统的命令。
@@ -109,6 +111,7 @@ python scripts/audit-public.py
 ```sh
 node tests/server.test.cjs
 node tests/textbook-api.test.cjs
+node tests/textbook-wait.test.cjs
 ```
 
 API 检查使用模拟响应与占位密钥，不产生付费调用。浏览器检查可按需安装 Playwright（仅开发用途）：

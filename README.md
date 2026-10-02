@@ -64,6 +64,8 @@ The gateway must support Bearer authentication, non-streaming Chat Completions, 
 
 If the connection error reports `EACCES/EPERM`, local policy is preventing the Node.js process from using the network. Stop that server and run `node server.js` in an ordinary terminal, or grant outbound network access to that process. This failure occurs before an API HTTP response and does not determine whether a key or model is valid. An unauthenticated `401` establishes reachability only, not successful authenticated generation.
 
+Generation has no workbench-imposed waiting deadline or response-inactivity timeout. Slow school gateways can continue until they respond; keep the page and server open. “Cancel generation” or closing the browser connection stops the local pending request. The app does not retry automatically. An external gateway can still return its own timeout or close the connection; that is reported separately, and cannot be prevented by removing the local deadline.
+
 ## Reproduce training
 
 Basic Python exercises use the standard library. The tiny language model requires **Python 3.10+ and PyTorch 2.2+**. Use an independent virtual environment and follow [PyTorch's official installation instructions](https://pytorch.org/get-started/locally/) for your platform.
@@ -109,6 +111,7 @@ With `node server.js` running in another terminal:
 ```sh
 node tests/server.test.cjs
 node tests/textbook-api.test.cjs
+node tests/textbook-wait.test.cjs
 ```
 
 API tests use mocked responses and a placeholder key, with no paid DeepSeek calls. Browser checks optionally require Playwright for development:

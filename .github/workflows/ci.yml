@@ -34,6 +34,7 @@ jobs:
           node -e 'const wait=async()=>{for(let i=0;i<50;i++){try{if((await fetch("http://127.0.0.1:5179")).ok)return;}catch{}await new Promise(r=>setTimeout(r,100));}process.exit(1);};wait();'
           node tests/server.test.cjs
           node tests/textbook-api.test.cjs
+          node tests/textbook-wait.test.cjs
   teaching-model:
     runs-on: ubuntu-latest
     timeout-minutes: 15

@@ -25,6 +25,8 @@ const server = http.createServer((req,res)=>{
     res.end(req.method==='HEAD'?undefined:data);
   });
 });
+// Generation may wait indefinitely; header/body upload limits are unchanged.
+server.setTimeout(0);
 server.on('error',e=>{
   const occupied=()=>{console.error(`端口 ${port} 已被其他程序占用。请直接打开 index.html，或设置 STUDY_PORT 使用其他端口。`);process.exitCode=1;};
   if(e.code!=='EADDRINUSE'){console.error('无法启动本地服务。');process.exitCode=1;return;}

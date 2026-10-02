@@ -36,7 +36,7 @@
     const range=kind==='lesson'?getRange(el):null,pages=kind==='outline'?book.pages.map(p=>({page:p.page,text:p.text.length>180?p.text.slice(0,120)+'\n…\n'+p.text.slice(-60):p.text})):book.pages.slice(range.start-1,range.end);
     if(range&&(pages.length>40||pages.reduce((n,p)=>n+p.text.length,0)>100000))throw new Error('本节超过40页或10万字，请分段生成。');
     if(kind==='lesson'&&!book.lessons?.[range.key]&&Object.keys(book.lessons||{}).length>=100)throw new Error('每本教材最多保存100段展示。请导出已有内容后再整理。');
-    const target=book;busy=true;controller=new AbortController();message=kind==='outline'?'正在按全书页码节选生成目录…':'正在依据本节原文设计学习展示…';paint(el);
+    const target=book;busy=true;controller=new AbortController();message=(kind==='outline'?'正在按全书页码节选生成目录…':'正在依据本节原文设计学习展示…')+' 接口较慢时会持续等待，不自动超时取消；可点击“取消生成”停止。';paint(el);
     try{const response=await fetch('/api/textbook',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key,baseUrl,model,kind,pages,title:target.title,goal}),signal:controller.signal});let data;try{data=await response.json();}catch{throw new Error('本地服务未返回JSON，请重新启动工作台服务。');}if(!response.ok)throw new Error(data.error||'生成失败。');const content=TextbookSchema.validate(data.content,kind,pages.map(p=>p.page));const updated=structuredClone(target);if(kind==='outline')updated.outline=content;else(updated.lessons||={})[range.key]=content;await V.put('books',updated);book=updated;books=books.map(b=>b.id===book.id?book:b);message=`已生成并保存 · 输入 ${data.usage?.promptTokens||0} / 输出 ${data.usage?.completionTokens||0} tokens。生成内容请核对原文。`;}
     catch(error){message=error.name==='AbortError'?'生成已取消，未写入新展示。':error.message;}
     finally{busy=false;controller=null;paint(document.querySelector('#textbook-root'));}

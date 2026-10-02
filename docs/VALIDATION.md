@@ -9,6 +9,7 @@
 | `tests/metrics.test.cjs` | 624 classification-metric reference matrices / 指标参考矩阵 | Node |
 | `tests/cards.test.cjs`, `state-integrity.test.cjs`, `backup-size.test.cjs` | Parsing, state integrity and backup limits / 解析、状态与备份边界 | Node |
 | `tests/server.test.cjs`, `textbook-api.test.cjs` | Static allowlist, headers, local origin, schema, default/custom Base URL, synthetic gateway transport and rejected redirects / 本机服务、默认/自定义地址、模拟网关与重定向阻断 | Running local server / 已启动服务 |
+| `tests/textbook-wait.test.cjs` | Accelerated application deadlines with delayed real HTTP headers/body; manual cancellation closes upstream / 加速应用定时器、真实 HTTP 慢响应、手动取消断开上游 | Node; isolated synthetic gateway / 隔离的合成网关 |
 | `tests/launcher.test.cjs` | Windows launcher and port behavior / Windows 启动及端口 | Windows, Node |
 | `tests/workspace-v2.test.cjs` | Real Chinese PDF extraction; course state/tools; memory-only Base URL; synthetic attachments; CSV safety; byte-preserving backup; invalid-input rejection; migration; 24 layouts / PDF、课程、附件、备份、迁移、布局 | Local server, Playwright, Chromium/Edge |
 | `practice/test_math_lab.py` | Standard-library numerical/gradient checks / 标准库数值与梯度 | Python |

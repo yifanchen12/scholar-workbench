@@ -27,6 +27,7 @@ const outline={title:'测试书',sections:[{title:'概率',start:1,end:2,summary
   const lesson={title:'条件概率',summary:'概览',concepts:[{title:'概率',text:'解释',pages:[1]}],steps:[],comparisons:[],charts:[],questions:[]};
   assert.equal(schema.validate(lesson,'lesson',[1]).title,'条件概率');assert.throws(()=>schema.validate({...lesson,concepts:[{...lesson.concepts[0],pages:[99]}]},'lesson',[1]));assert.throws(()=>schema.validate({...lesson,charts:[{title:'错数',labels:['a'],values:[Infinity],pages:[1]}]},'lesson',[1]));
   await assert.rejects(generate(input,async()=>({ok:false,status:401})),/密钥无效/);
+  await assert.rejects(generate(input,async()=>({ok:false,status:504})),/网关返回超时.*没有主动取消/);
   await assert.rejects(generate(input,async()=>({ok:true,text:async()=>JSON.stringify({choices:[{finish_reason:'length',message:{content:'{}'}}]})})),/未完整/);
   await assert.rejects(generate(input,async()=>({ok:true,text:async()=>JSON.stringify({choices:[{finish_reason:'stop',message:{content:''}}]})})),/为空/);
   const server=process.env.STUDY_URL||'http://127.0.0.1:5179';
