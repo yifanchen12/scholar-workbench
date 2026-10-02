@@ -1,0 +1,26 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {chromium}=require('./browser-runtime.cjs').playwright;
+const C=require('../core');
+const base=process.env.STUDY_URL || 'http://127.0.0.1:5179';
+(async()=>{
+  const browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_PATH||undefined});
+  async function pageWith(script){const ctx=await browser.newContext({viewport:{width:1024,height:900}});await ctx.addInitScript(script);const page=await ctx.newPage();await page.goto(base);return page;}
+  const blocked=await pageWith(()=>{Storage.prototype.setItem=function(){throw new DOMException('Quota exceeded','QuotaExceededError');};});
+  await blocked.getByRole('button',{name:'添加任务',exact:true}).first().click();await blocked.locator('#task-form [name=title]').fill('仅在内存的任务');await blocked.getByRole('button',{name:'保存任务',exact:true}).click();
+  assert.match(await blocked.locator('#storage-alert').textContent(),/保存失败/);assert.equal(await blocked.locator('.task-title').textContent(),'仅在内存的任务');
+  await blocked.goto(base+'/#data');const download=blocked.waitForEvent('download');await blocked.getByRole('button',{name:'导出 JSON 备份',exact:true}).click();assert.ok((await download).suggestedFilename().endsWith('.json'));
+  const corrupt=await pageWith(()=>{localStorage.setItem('youyan.study.v1','{broken-original');});assert.match(await corrupt.locator('#storage-alert').textContent(),/无法读取/);assert.equal(await corrupt.evaluate(()=>localStorage.getItem('youyan.study.v1.recovery')),'{broken-original');
+  const protectedPage=await pageWith(()=>{localStorage.setItem('youyan.study.v1','{original-must-survive');const set=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key.endsWith('.recovery'))throw new DOMException('Quota exceeded','QuotaExceededError');return set.call(this,key,value);};});
+  await protectedPage.getByRole('button',{name:'添加任务',exact:true}).first().click();await protectedPage.locator('#task-form [name=title]').fill('保护旧数据时的新任务');await protectedPage.getByRole('button',{name:'保存任务',exact:true}).click();assert.equal(await protectedPage.evaluate(()=>localStorage.getItem('youyan.study.v1')),'{original-must-survive');assert.match(await protectedPage.locator('#storage-alert').textContent(),/不会覆盖原记录/);
+  const staleRecovery=await pageWith(()=>{localStorage.setItem('youyan.study.v1.recovery','{older-recovery');localStorage.setItem('youyan.study.v1','{new-corrupt-original');const set=Storage.prototype.setItem;Storage.prototype.setItem=function(key,value){if(key.endsWith('.recovery'))throw new DOMException('Quota exceeded','QuotaExceededError');return set.call(this,key,value);};});
+  await staleRecovery.getByRole('button',{name:'添加任务',exact:true}).first().click();await staleRecovery.locator('#task-form [name=title]').fill('旧恢复副本不是新原文');await staleRecovery.getByRole('button',{name:'保存任务',exact:true}).click();assert.equal(await staleRecovery.evaluate(()=>localStorage.getItem('youyan.study.v1')),'{new-corrupt-original');assert.equal(await staleRecovery.evaluate(()=>localStorage.getItem('youyan.study.v1.recovery')),'{older-recovery');
+  const keyboard=await pageWith(()=>{});await keyboard.goto(base+'/#logic');await keyboard.getByRole('button',{name:'我来圈组',exact:true}).click();await keyboard.locator('.kmap-cell[data-index="0"]').focus();await keyboard.keyboard.press('Space');assert.equal(await keyboard.evaluate(()=>document.activeElement.dataset.index),'0');assert.equal(await keyboard.locator('.manual-selected').count(),1);
+  await keyboard.getByRole('button',{name:'系统化简',exact:true}).click();await keyboard.locator('.expression-import summary').click();await keyboard.locator('#logic-expression').fill('A;alert(1)');await keyboard.getByRole('button',{name:'转换并化简',exact:true}).click();assert.match(await keyboard.locator('#expression-error').textContent(),/不支持/);
+  const clipboard=await pageWith(()=>{Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:async()=>{throw new DOMException('Denied','NotAllowedError');}}});});
+  await clipboard.goto(base+'/#materials');const draft='真实贡献与证明位置：待填写。🙂\n第二行';await clipboard.locator('#draft-text').fill(draft);await clipboard.getByRole('button',{name:'复制草稿',exact:true}).click();
+  assert.equal(await clipboard.locator('#export-text').inputValue(),draft);assert.deepEqual(await clipboard.locator('#export-text').evaluate(el=>({start:el.selectionStart,end:el.selectionEnd,focused:document.activeElement===el})),{start:0,end:draft.length,focused:true});assert.match(await clipboard.locator('#toast').textContent(),/Ctrl\+C/);
+  await clipboard.getByRole('button',{name:'复制文字',exact:true}).click();assert.equal(await clipboard.locator('#export-text').inputValue(),draft);assert.equal(await clipboard.locator('#export-text').evaluate(el=>el.selectionEnd),draft.length);
+  const modified={...C.initialState(),reviews:JSON.parse('{"__proto__":{"level":1,"dueAt":1,"lastAt":1,"attempts":1,"lapses":0}}')};assert.throws(()=>C.validateState(modified));
+  await browser.close();console.log('Edge cases passed: quota failure, recoverable raw data, no overwrite when recovery fails, safe backup, clipboard-denial selection with Unicode unchanged, keyboard focus after redraw, and rejected expression/prototype input.');
+})().catch(e=>{console.error(e.message);process.exit(1);});

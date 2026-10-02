@@ -1,0 +1,94 @@
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const { chromium } = require('./browser-runtime.cjs').playwright;
+const BASE = process.env.STUDY_URL || 'http://127.0.0.1:5179';
+const artifacts = path.resolve(__dirname,'../docs/screenshots');
+fs.mkdirSync(artifacts,{recursive:true});
+(async()=>{
+  const browser = await chromium.launch({headless:true,executablePath:process.env.BROWSER_PATH||undefined});
+  const context = await browser.newContext({viewport:{width:1440,height:1000},acceptDownloads:true});
+  const page = await context.newPage();const errors=[],external=[];
+  page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(!r.url().startsWith(BASE))external.push(r.url());});
+  await page.goto(BASE);await page.screenshot({path:path.join(artifacts,'01-today-desktop.png'),fullPage:true});
+  await page.getByRole('button',{name:'添加任务',exact:true}).first().click();
+  await page.locator('#task-form [name=title]').fill('测试：完成一次真值核验');
+  await page.locator('#task-form [name=course]').selectOption('数字系统设计');
+  await page.locator('#task-form [name=due]').fill('2026-10-10');
+  await page.locator('#task-form [name=priority]').selectOption('high');
+  await page.getByRole('button',{name:'保存任务',exact:true}).click();
+  await page.reload();assert.equal(await page.locator('.task-title').textContent(),'测试：完成一次真值核验');
+  await page.locator('[data-action=edit-task]').click();await page.locator('#task-form [name=title]').fill('测试：编辑后完成真值核验');await page.getByRole('button',{name:'保存任务',exact:true}).click();assert.equal(await page.locator('.task-title').textContent(),'测试：编辑后完成真值核验');
+  await page.getByRole('checkbox').click();assert.equal(await page.locator('.task-title').count(),0);
+  await page.getByRole('button',{name:'已完成',exact:true}).click();assert.equal(await page.locator('.task-title').textContent(),'测试：编辑后完成真值核验');
+  await page.locator('a[href="#logic"]').first().click();
+  assert.match(await page.locator('.formula').textContent(),/B'·D'/);
+  await page.locator('[data-action=logic-group]').first().click();assert.equal(await page.locator('.kmap td.highlight').count(),4);
+  const svgDownload=page.waitForEvent('download');await page.getByRole('button',{name:'下载分组图 SVG',exact:true}).click();const svg=await svgDownload;assert.match(fs.readFileSync(await svg.path(),'utf8'),/stroke-dasharray/);
+  await page.getByRole('button',{name:'我来圈组',exact:true}).click();assert.equal(await page.locator('.formula-result').isVisible(),false);
+  for(const i of [0,2,8])await page.locator(`.kmap-cell[data-index="${i}"]`).click();await page.getByRole('button',{name:'加入这一组',exact:true}).click();assert.match(await page.locator('.manual-feedback').textContent(),/2的幂/);
+  await page.locator('.kmap-cell[data-index="10"]').click();await page.getByRole('button',{name:'加入这一组',exact:true}).click();assert.equal(await page.locator('.manual-group').count(),1);
+  await page.getByRole('button',{name:'我已圈完，检查覆盖',exact:true}).click();assert.match(await page.locator('.manual-feedback').textContent(),/达到最少 1 项/);
+  await page.getByRole('button',{name:'导出我的过程',exact:true}).click();assert.match(await page.locator('#export-text').inputValue(),/我的与或式/);await page.locator('#text-dialog [data-close]').click();await page.getByRole('button',{name:'系统化简',exact:true}).click();
+  await page.locator('.expression-import summary').click();await page.locator('#logic-expression').fill("AB + A'C");await page.getByRole('button',{name:'转换并化简',exact:true}).click();assert.equal(await page.locator('#logic-ones').inputValue(),'2, 3, 6, 7, 12, 13, 14, 15');await page.getByRole('button',{name:'四角合并',exact:true}).click();
+  await page.locator('.circuit-section summary').click();for(let value=0;value<16;value++){const bits=value.toString(2).padStart(4,'0');for(let j=0;j<4;j++){const button=page.locator(`[data-action="circuit-toggle"][data-index="${j}"]`);if((await button.textContent()).slice(-1)!==bits[j])await button.click();}assert.match(await page.locator('#circuit-status').textContent(),new RegExp(`F=${[0,2,8,10].includes(value)?1:0}`));}
+  const hdlDownload=page.waitForEvent('download');await page.getByRole('button',{name:'下载 Verilog',exact:true}).click();assert.equal((await hdlDownload).suggestedFilename(),'logic_function.v');
+  await page.locator('#logic-ones').fill('1,2');await page.locator('#logic-dc').fill('2');await page.getByRole('button',{name:'化简并验证',exact:true}).click();
+  assert.match(await page.locator('#logic-error').textContent(),/不能重叠/);assert.match(await page.locator('.formula').textContent(),/B'·D'/);
+  await page.getByRole('button',{name:'无关项的利用',exact:true}).click();assert.equal(await page.locator('.kmap tbody tr').count(),2);
+  await page.screenshot({path:path.join(artifacts,'02-logic-desktop.png'),fullPage:true});
+  await page.getByRole('button',{name:'导出 Markdown 过程',exact:true}).click();assert.match(await page.locator('#export-text').inputValue(),/①/);assert.match(await page.locator('#export-text').inputValue(),/真值验证：通过/);
+  const mdDownload=page.waitForEvent('download');await page.getByRole('button',{name:'下载 Markdown',exact:true}).click();assert.equal((await mdDownload).suggestedFilename(),'卡诺图化简.md');
+  await page.locator('#text-dialog [data-close]').click();
+  await page.getByRole('button',{name:'保存为练习卡',exact:true}).click();await page.getByRole('button',{name:'加入复习',exact:true}).click();
+  await page.locator('a[href="#ai"]').click();const before=Number(await page.locator('#ai-loss').textContent());await page.getByRole('button',{name:'走 1 步',exact:true}).click();assert.ok(Number(await page.locator('#ai-loss').textContent())<before);
+  await page.getByRole('button',{name:'走 20 步',exact:true}).click();assert.ok(Number(await page.locator('#ai-loss').textContent())<.03);
+  await page.locator('#ai-eta').fill('.8');await page.getByRole('button',{name:'走 20 步',exact:true}).click();assert.ok(await page.locator('#ai-loss').textContent());
+  await page.locator('#ai-preset').selectOption('1');assert.match(await page.locator('.hint').first().textContent(),/放大 50 倍/);
+  await page.getByRole('button',{name:'走 20 步',exact:true}).click();await page.getByRole('button',{name:'导出实验记录',exact:true}).click();assert.match(await page.locator('#export-text').inputValue(),/测试数据（不用于训练）/);await page.locator('#text-dialog [data-close]').click();
+  await page.getByRole('button',{name:'保存为回忆卡',exact:true}).click();await page.getByRole('button',{name:'加入复习',exact:true}).click();
+  await page.locator('a[href="#review"]').click();await page.getByRole('button',{name:'查看答案',exact:true}).click();
+  await page.getByRole('button',{name:/独立回答/}).click();
+  const reviewState=await page.evaluate(()=>JSON.parse(localStorage.getItem('youyan.study.v1')));assert.equal(Object.keys(reviewState.reviews).length,1);
+  await page.getByRole('button',{name:'基础自测',exact:true}).click();await page.locator('[data-choice="0"]').click();
+  assert.equal(await page.locator('.practice-choice.correct').count(),1);assert.equal(await page.locator('.practice-choice.wrong').count(),1);
+  assert.match(await page.locator('.review-answer').textContent(),/10 分钟/);
+  await page.getByRole('button',{name:'下一题',exact:true}).click();assert.equal(await page.locator('.practice-choice:disabled').count(),0);
+  await page.getByRole('button',{name:'查看知识卡库',exact:true}).click();await page.locator('#card-search').fill('贝叶斯');assert.equal(await page.locator('#library-items details').count(),1);
+  await page.locator('a[href="#materials"]').click();await page.getByRole('button',{name:'录入已提到的两项学生工作',exact:true}).click();assert.equal(await page.locator('.experience').count(),2);
+  await page.locator('[data-action=edit-experience]').first().click();await page.locator('#experience-form [name=detail]').fill('测试：组织一次学习讨论，具体日期待补。');await page.getByRole('button',{name:'保存经历',exact:true}).click();assert.equal(await page.locator('.experience').count(),2);assert.match(await page.locator('.experience').first().textContent(),/组织一次学习讨论/);
+  const draft='人工智能'.repeat(37)+'北邮';assert.equal([...draft].length,150);
+  await page.locator('#draft-text').fill(draft);assert.equal(await page.locator('#count-total').textContent(),'150');assert.match(await page.locator('#draft-status').textContent(),/正好 150/);
+  await page.reload();assert.equal(await page.locator('#draft-text').inputValue(),draft);
+  await page.locator('#draft-text').fill('北邮 AI😀\n');assert.equal(await page.locator('#count-total').textContent(),'7');
+  await page.locator('a[href="#data"]').click();const backupDownload=page.waitForEvent('download');await page.getByRole('button',{name:'导出 JSON 备份',exact:true}).click();
+  const downloaded=await backupDownload;const backupText=fs.readFileSync(await downloaded.path(),'utf8');const backup=JSON.parse(backupText);assert.equal(backup.cards.length,2);assert.equal(backup.experiences.length,2);
+  await page.locator('#import-file').setInputFiles({name:'invalid.json',mimeType:'application/json',buffer:Buffer.from('{"version":2}')});await page.waitForTimeout(100);assert.equal(await page.locator('#confirm-dialog').isVisible(),false);
+  await page.locator('#import-file').setInputFiles({name:'backup.json',mimeType:'application/json',buffer:Buffer.from(backupText)});await page.locator('#confirm-action').click();
+  await page.locator('nav a[href="#today"]').click();await page.locator('#focus-minutes').fill('1');await page.locator('#focus-topic').fill('测试专注');await page.getByRole('button',{name:'开始专注',exact:true}).click();
+  await page.getByRole('button',{name:'暂停',exact:true}).click();await page.reload();assert.equal(await page.locator('#timer-label').textContent(),'已暂停');
+  await page.getByRole('button',{name:'继续专注',exact:true}).click();
+  await page.evaluate(()=>{const s=JSON.parse(localStorage.getItem('youyan.study.v1'));s.timer.endsAt=Date.now()-1;localStorage.setItem('youyan.study.v1',JSON.stringify(s));});
+  await page.reload();assert.equal(await page.getByRole('button',{name:'开始专注',exact:true}).count(),1);
+  let s=await page.evaluate(()=>JSON.parse(localStorage.getItem('youyan.study.v1')));assert.equal(s.sessions.length,1);assert.equal(s.sessions[0].minutes,1);
+  await page.reload();s=await page.evaluate(()=>JSON.parse(localStorage.getItem('youyan.study.v1')));assert.equal(s.sessions.length,1);
+  // 验证导入中包含HTML文本时不会执行或产生真实标签。
+  s.tasks.push({id:'xss-test',title:'<img src=x onerror="window.__xss=1">',course:'其他',due:'',priority:'normal',done:false,createdAt:Date.now()});
+  await page.evaluate(s=>localStorage.setItem('youyan.study.v1',JSON.stringify(s)),s);await page.reload();assert.equal(await page.evaluate(()=>window.__xss),undefined);assert.equal(await page.locator('.task-row img').count(),0);
+  // 同一来源下开新窗口，验证同步刷新。
+  const second=await context.newPage();await second.goto(BASE);await second.evaluate(()=>{const s=JSON.parse(localStorage.getItem('youyan.study.v1'));s.tasks.push({id:'sync-test',title:'同步任务',course:'其他',due:'',priority:'normal',done:false,createdAt:Date.now()});localStorage.setItem('youyan.study.v1',JSON.stringify(s));});
+  await page.getByText('同步任务',{exact:true}).waitFor();await second.close();
+  for(const width of [1440,1024,768,390,360,320]){
+    await page.setViewportSize({width,height:960});
+    for(const route of ['today','logic','ai','review','materials','data']){
+      await page.goto(`${BASE}/#${route}`);
+      assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),`horizontal overflow at ${width} ${route}`);
+      if(width===390)await page.screenshot({path:path.join(artifacts,`mobile-${route}.png`),fullPage:true});
+    }
+  }
+  const direct=await browser.newPage();await direct.goto('file:///'+path.resolve(__dirname,'../index.html').replaceAll('\\','/'));assert.equal(await direct.locator('h1').textContent(),'今天，从一件小事开始。');await direct.close();
+  assert.deepEqual(errors,[]);assert.deepEqual(external,[]);
+  await context.close();await browser.close();
+  console.log('Browser checks passed: tasks/edits, persistence, Karnaugh groups/exports/errors, regression lab, review, quiz, materials/edits, Unicode counts, JSON import, timer recovery, XSS, multi-window sync, direct-file mode, and 36 responsive layouts.');
+})().catch(error=>{console.error(error);process.exit(1);});

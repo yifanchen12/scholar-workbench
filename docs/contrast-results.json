@@ -1,0 +1,1672 @@
+{
+  "scope": "Targeted opaque-background text checks only; not full WCAG certification or assistive-device testing.",
+  "source": "https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html",
+  "minimum": 4.758842787868666,
+  "checks": 104,
+  "records": [
+    {
+      "label": "深色专注输入提示",
+      "foreground": [
+        170,
+        190,
+        217
+      ],
+      "background": [
+        28,
+        51,
+        82
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 6.734504117917557
+    },
+    {
+      "label": "专注状态",
+      "foreground": [
+        170,
+        190,
+        217
+      ],
+      "background": [
+        16,
+        33,
+        61
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 8.475051213816661
+    },
+    {
+      "label": "字数计数说明",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        243,
+        246,
+        251
+      ],
+      "opacity": 1,
+      "fontSize": "11px",
+      "contrast": 5.0159733345667625
+    },
+    {
+      "label": "字数计数说明",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        243,
+        246,
+        251
+      ],
+      "opacity": 1,
+      "fontSize": "11px",
+      "contrast": 5.0159733345667625
+    },
+    {
+      "label": "字数计数说明",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        243,
+        246,
+        251
+      ],
+      "opacity": 1,
+      "fontSize": "11px",
+      "contrast": 5.0159733345667625
+    },
+    {
+      "label": "材料页说明",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "材料页说明",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "逻辑输入提示",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "八种分组编号",
+      "foreground": [
+        255,
+        255,
+        255
+      ],
+      "background": [
+        36,
+        92,
+        216
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "八种分组编号",
+      "foreground": [
+        255,
+        255,
+        255
+      ],
+      "background": [
+        171,
+        89,
+        25
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.030453132403526
+    },
+    {
+      "label": "八种分组编号",
+      "foreground": [
+        255,
+        255,
+        255
+      ],
+      "background": [
+        0,
+        123,
+        112
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.163315718708324
+    },
+    {
+      "label": "八种分组编号",
+      "foreground": [
+        255,
+        255,
+        255
+      ],
+      "background": [
+        145,
+        75,
+        194
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.2639657811780785
+    },
+    {
+      "label": "八种分组编号",
+      "foreground": [
+        255,
+        255,
+        255
+      ],
+      "background": [
+        181,
+        59,
+        102
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.552325339956155
+    },
+    {
+      "label": "八种分组编号",
+      "foreground": [
+        255,
+        255,
+        255
+      ],
+      "background": [
+        69,
+        117,
+        79
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.370211755171814
+    },
+    {
+      "label": "八种分组编号",
+      "foreground": [
+        255,
+        255,
+        255
+      ],
+      "background": [
+        102,
+        85,
+        181
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.946321489795195
+    },
+    {
+      "label": "八种分组编号",
+      "foreground": [
+        255,
+        255,
+        255
+      ],
+      "background": [
+        70,
+        104,
+        129
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.9029556180538485
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.29638301501188
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.29638301501188
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        237,
+        243,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.881142195362138
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        237,
+        243,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.881142195362138
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.29638301501188
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        237,
+        243,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.881142195362138
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.29638301501188
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.29638301501188
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        237,
+        243,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.881142195362138
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.29638301501188
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        237,
+        243,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.881142195362138
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        237,
+        243,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.881142195362138
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.29638301501188
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        237,
+        243,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.881142195362138
+    },
+    {
+      "label": "选组后其他格子的编号",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 5.29638301501188
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 13.848018999241539
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 13.848018999241539
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        237,
+        243,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 12.762322828199542
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        237,
+        243,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 12.762322828199542
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 13.848018999241539
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        237,
+        243,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 12.762322828199542
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 13.848018999241539
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 13.848018999241539
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        237,
+        243,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 12.762322828199542
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 13.848018999241539
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        237,
+        243,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 12.762322828199542
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        237,
+        243,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 12.762322828199542
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 13.848018999241539
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        237,
+        243,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 12.762322828199542
+    },
+    {
+      "label": "选组后其他格子的真值",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        251,
+        252,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "25.6px",
+      "contrast": 13.848018999241539
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        100,
+        116,
+        139
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.758842787868666
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "16px",
+      "contrast": 14.206560548369316
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "13px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        100,
+        116,
+        139
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.758842787868666
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "16px",
+      "contrast": 14.206560548369316
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "13px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        100,
+        116,
+        139
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.758842787868666
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "16px",
+      "contrast": 14.206560548369316
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "13px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        100,
+        116,
+        139
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.758842787868666
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "16px",
+      "contrast": 14.206560548369316
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "13px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        100,
+        116,
+        139
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.758842787868666
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "16px",
+      "contrast": 14.206560548369316
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "13px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        100,
+        116,
+        139
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.758842787868666
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "16px",
+      "contrast": 14.206560548369316
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "13px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        100,
+        116,
+        139
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.758842787868666
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "16px",
+      "contrast": 14.206560548369316
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "13px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        100,
+        116,
+        139
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "12px",
+      "contrast": 4.758842787868666
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        36,
+        92,
+        216
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "14px",
+      "contrast": 5.837475270710551
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "16px",
+      "contrast": 14.206560548369316
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "13px",
+      "contrast": 5.43351261969255
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        23,
+        43,
+        73
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "17px",
+      "contrast": 14.206560548369316
+    },
+    {
+      "label": "电路文字，包括0状态",
+      "foreground": [
+        91,
+        107,
+        129
+      ],
+      "background": [
+        255,
+        255,
+        255
+      ],
+      "opacity": 1,
+      "fontSize": "22px",
+      "contrast": 5.43351261969255
+    }
+  ]
+}

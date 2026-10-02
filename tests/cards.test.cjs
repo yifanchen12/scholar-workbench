@@ -1,0 +1,18 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const path=require('node:path');
+const C=require('../core');
+const source='问：为什么？\n答：第一行\n第二行\n---\n问:另一个问题\n答:另一个答案';
+const expected=[{question:'为什么？',answer:'第一行\n第二行',topic:'人工智能基础'},{question:'另一个问题',answer:'另一个答案',topic:'人工智能基础'}];
+assert.deepEqual(C.parseCardBatch(source,'人工智能基础'),expected);
+assert.deepEqual(C.parseCardBatch('\uFEFF'+source.replaceAll('\n','\r\n'),'人工智能基础'),expected);
+assert.deepEqual(C.parseCardBatch('问：问题第一行\n补充条件\n答：答案','  人工智能基础  '),[{question:'问题第一行\n补充条件',answer:'答案',topic:'人工智能基础'}]);
+for(const invalid of ['',null,123,'答：反序\n问：问题','问：没有答案','问：\n答：答案','问：问题\n答：','问：问题\n问：另一个问题\n答：答案','问：问题\n答：答案\n答：重复','问：问题\n答：答案\n---','---\n问：问题\n答：答案','x'.repeat(500001),'问：'+'x'.repeat(1001)+'\n答：a','问：q\n答：'+'x'.repeat(4001),Array.from({length:101},()=> '问：q\n答：a').join('\n---\n')])assert.throws(()=>C.parseCardBatch(invalid,'人工智能基础'));
+for(const topic of ['',null,' '.repeat(3),'x'.repeat(101)])assert.throws(()=>C.parseCardBatch(source,topic));
+const a=expected[0],b={...a,answer:'不同答案'},c={...a,topic:'数字系统设计'};
+assert.deepEqual(C.deduplicateCards([a,a,b,c],[a]),{fresh:[b,c],duplicates:2});
+assert.deepEqual(C.deduplicateCards([a,a,b,c],[]),{fresh:[a,b,c],duplicates:1});
+const safe=C.parseCardBatch('问：<img src=x onerror=alert(1)>\n答：<script>alert(1)</script>','人工智能基础');assert.equal(safe[0].question,'<img src=x onerror=alert(1)>');
+const pack=C.parseCardBatch(fs.readFileSync(path.resolve(__dirname,'../examples/AI实训复习卡.txt'),'utf8'),'人工智能基础');assert.equal(pack.length,12);assert.equal(C.deduplicateCards(pack,[]).fresh.length,12);
+console.log('Card batch parser checks passed: multiline/UTF-8 text, explicit delimiters, size/count limits, complete-record deduplication and twelve practice cards.');

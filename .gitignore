@@ -1,0 +1,41 @@
+# Credentials and private material
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+.aws/
+.codex/
+.agents/
+credentials*.json
+*backup*.json
+*备份*.json
+uploads/
+evidence/
+user-data/
+# Development artifacts
+node_modules/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+*.pt
+*.pth
+practice/llm-output/
+tmp/
+*.log
+.DS_Store
+Thumbs.db
+# Internal records and generated archives
+docs/plans/
+docs/验收说明.md
+docs/screenshots/
+docs/screenshots-v2/*
+!docs/screenshots-v2/ai-clean.png
+!docs/screenshots-v2/logic-clean.png
+!docs/screenshots-v2/materials-clean.png
+output/*.zip
+!output/邮研-Python实训包.zip
+output/交付包校验.json

@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="704" height="817" viewBox="0 0 704 817" role="img"><title>卡诺图分组与化简结果</title><desc>每种颜色表示一个卡诺组。同色分段框表示跨边界相邻，格子中的编号表示参与的组。</desc><rect width="100%" height="100%" fill="#fff"/><g font-family="Segoe UI,Microsoft YaHei,sans-serif">
+<text x="32" y="42" font-size="26" fill="#172b49" >卡诺图 · 分组与化简</text>
+<text x="32" y="78" font-size="24" fill="#245cd8" >F = B·C + A&apos;·B·D + A·C</text>
+<text x="100" y="112" font-size="16" fill="#64748b" text-anchor="end">AB \ CD</text>
+<text x="176" y="112" font-size="18" fill="#64748b" text-anchor="middle">00</text>
+<text x="312" y="112" font-size="18" fill="#64748b" text-anchor="middle">01</text>
+<text x="448" y="112" font-size="18" fill="#64748b" text-anchor="middle">11</text>
+<text x="584" y="112" font-size="18" fill="#64748b" text-anchor="middle">10</text>
+<text x="88" y="186" font-size="18" fill="#64748b" text-anchor="end">00</text>
+<rect x="112" y="130" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="125" y="153" font-size="13" fill="#64748b" >m0</text>
+<text x="176" y="190" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="248" y="130" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="261" y="153" font-size="13" fill="#64748b" >m1</text>
+<text x="312" y="190" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="384" y="130" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="397" y="153" font-size="13" fill="#64748b" >m3</text>
+<text x="448" y="190" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="520" y="130" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="533" y="153" font-size="13" fill="#64748b" >m2</text>
+<text x="584" y="190" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<text x="88" y="294" font-size="18" fill="#64748b" text-anchor="end">01</text>
+<rect x="112" y="238" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="125" y="261" font-size="13" fill="#64748b" >m4</text>
+<text x="176" y="298" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="248" y="238" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="261" y="261" font-size="13" fill="#64748b" >m5</text>
+<text x="312" y="298" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="312" y="322" font-size="15" fill="#ab5919" text-anchor="middle" font-weight="700">2</text>
+<rect x="384" y="238" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="397" y="261" font-size="13" fill="#64748b" >m7</text>
+<text x="448" y="298" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="436.5" y="322" font-size="15" fill="#245cd8" text-anchor="middle" font-weight="700">1</text>
+<text x="459.5" y="322" font-size="15" fill="#ab5919" text-anchor="middle" font-weight="700">2</text>
+<rect x="520" y="238" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="533" y="261" font-size="13" fill="#64748b" >m6</text>
+<text x="584" y="298" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="584" y="322" font-size="15" fill="#245cd8" text-anchor="middle" font-weight="700">1</text>
+<text x="88" y="402" font-size="18" fill="#64748b" text-anchor="end">11</text>
+<rect x="112" y="346" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="125" y="369" font-size="13" fill="#64748b" >m12</text>
+<text x="176" y="406" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="248" y="346" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="261" y="369" font-size="13" fill="#64748b" >m13</text>
+<text x="312" y="406" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="384" y="346" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="397" y="369" font-size="13" fill="#64748b" >m15</text>
+<text x="448" y="406" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="436.5" y="430" font-size="15" fill="#245cd8" text-anchor="middle" font-weight="700">1</text>
+<text x="459.5" y="430" font-size="15" fill="#007b70" text-anchor="middle" font-weight="700">3</text>
+<rect x="520" y="346" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="533" y="369" font-size="13" fill="#64748b" >m14</text>
+<text x="584" y="406" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="572.5" y="430" font-size="15" fill="#245cd8" text-anchor="middle" font-weight="700">1</text>
+<text x="595.5" y="430" font-size="15" fill="#007b70" text-anchor="middle" font-weight="700">3</text>
+<text x="88" y="510" font-size="18" fill="#64748b" text-anchor="end">10</text>
+<rect x="112" y="454" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="125" y="477" font-size="13" fill="#64748b" >m8</text>
+<text x="176" y="514" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="248" y="454" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="261" y="477" font-size="13" fill="#64748b" >m9</text>
+<text x="312" y="514" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="384" y="454" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="397" y="477" font-size="13" fill="#64748b" >m11</text>
+<text x="448" y="514" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="448" y="538" font-size="15" fill="#007b70" text-anchor="middle" font-weight="700">3</text>
+<rect x="520" y="454" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="533" y="477" font-size="13" fill="#64748b" >m10</text>
+<text x="584" y="514" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="584" y="538" font-size="15" fill="#007b70" text-anchor="middle" font-weight="700">3</text>
+<rect x="387" y="241" width="258" height="202" rx="15" fill="none" stroke="#245cd8" stroke-width="2.7" />
+<text x="32" y="610" font-size="17" fill="#245cd8" >1  m(6, 7, 14, 15) → B·C</text>
+<rect x="254" y="244" width="252" height="88" rx="15" fill="none" stroke="#ab5919" stroke-width="2.7" />
+<text x="32" y="644" font-size="17" fill="#ab5919" >2  m(5, 7) → A&apos;·B·D</text>
+<rect x="393" y="355" width="246" height="190" rx="15" fill="none" stroke="#007b70" stroke-width="2.7" />
+<text x="32" y="678" font-size="17" fill="#007b70" >3  m(10, 11, 14, 15) → A·C</text>
+<text x="32" y="760" font-size="14" fill="#64748b" >同色虚线框：跨边界同一组；数字：组号。</text>
+<text x="32" y="788" font-size="14" fill="#64748b" >最少项数 → 最少文字数 · 真值验证通过</text>
+</g></svg>

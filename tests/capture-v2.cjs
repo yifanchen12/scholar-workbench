@@ -1,0 +1,4 @@
+'use strict';
+const fs=require('node:fs');
+const {chromium}=require('./browser-runtime.cjs').playwright;
+(async()=>{const browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_PATH||undefined});try{const page=await browser.newPage({viewport:{width:1440,height:1000}});fs.mkdirSync('docs/screenshots-v2',{recursive:true});for(const route of ['ai','logic','materials']){await page.goto('http://127.0.0.1:5179/#'+route);await page.locator(route==='ai'?'#course-notes':route==='logic'?'#book-upload':'#record-query').waitFor();await page.screenshot({path:`docs/screenshots-v2/${route}-clean.png`,fullPage:false});}console.log('Clean v2 previews saved; no personal data or API key added.');}finally{await browser.close();}})().catch(e=>{console.error(e.message);process.exitCode=1;});

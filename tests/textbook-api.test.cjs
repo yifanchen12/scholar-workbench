@@ -1,0 +1,24 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {generate,validateInput}=require('../deepseek-api.js');
+const schema=require('../textbook-schema.js');
+const fakeKey='test-only-placeholder';
+const input={key:fakeKey,model:'deepseek-flash',kind:'outline',title:'测试书',goal:'解释',pages:[{page:1,text:'第一章 概率'},{page:2,text:'第二章 学习'}]};
+const outline={title:'测试书',sections:[{title:'概率',start:1,end:2,summary:'基础'}]};
+(async()=>{
+  let body;
+  const output=await generate(input,async(url,options)=>{assert.equal(url,'https://api.deepseek.com/chat/completions');assert.equal(options.headers.Authorization,'Bearer '+fakeKey);body=JSON.parse(options.body);return {ok:true,text:async()=>JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify(outline)}}],usage:{prompt_tokens:100,completion_tokens:20}})};});
+  assert.deepEqual(output.content,outline);assert.equal(body.response_format.type,'json_object');assert(!JSON.stringify(body).includes(fakeKey));
+  assert.throws(()=>validateInput({...input,key:''}));assert.throws(()=>validateInput({...input,model:'bad\nmodel'}));assert.throws(()=>validateInput({...input,pages:[...input.pages,input.pages[0]]}));assert.throws(()=>schema.validate({...outline,sections:[{...outline.sections[0],end:3}]},'outline',[1,2]));
+  const lesson={title:'条件概率',summary:'概览',concepts:[{title:'概率',text:'解释',pages:[1]}],steps:[],comparisons:[],charts:[],questions:[]};
+  assert.equal(schema.validate(lesson,'lesson',[1]).title,'条件概率');assert.throws(()=>schema.validate({...lesson,concepts:[{...lesson.concepts[0],pages:[99]}]},'lesson',[1]));assert.throws(()=>schema.validate({...lesson,charts:[{title:'错数',labels:['a'],values:[Infinity],pages:[1]}]},'lesson',[1]));
+  await assert.rejects(generate(input,async()=>({ok:false,status:401})),/密钥无效/);
+  await assert.rejects(generate(input,async()=>({ok:true,text:async()=>JSON.stringify({choices:[{finish_reason:'length',message:{content:'{}'}}]})})),/未完整/);
+  await assert.rejects(generate(input,async()=>({ok:true,text:async()=>JSON.stringify({choices:[{finish_reason:'stop',message:{content:''}}]})})),/为空/);
+  const server=process.env.STUDY_URL||'http://127.0.0.1:5179';
+  let response=await fetch(server+'/api/textbook',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(input)});assert.equal(response.status,403);
+  response=await fetch(server+'/api/textbook',{method:'POST',headers:{'Content-Type':'application/json',Origin:server},body:JSON.stringify({...input,key:''})});assert.equal(response.status,400);assert(!JSON.stringify(await response.json()).includes(fakeKey));
+  for(const asset of ['/vendor/pdfjs/pdf.mjs','/vendor/pdfjs/pdf.worker.mjs','/practice/tiny_llm.py'])assert.equal((await fetch(server+asset)).status,200);
+  assert.equal((await fetch(server+'/deepseek-api.js')).status,404);
+  console.log('Textbook schema, API protocol, secret exclusion, failure paths and same-origin guard passed. No paid API request made.');
+})().catch(e=>{console.error(e.message);process.exitCode=1;});

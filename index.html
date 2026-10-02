@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10213d">
+  <meta name="description" content="北邮 AI 学生的本地学习工作台：教材PDF、AI专业学习、主动回忆与综测记录。">
+  <title>邮研 · 学习工作台</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到主要内容</a>
+  <aside class="sidebar" aria-label="工作台导航">
+    <a class="brand" href="#today"><span class="brand-mark" aria-hidden="true">邮</span><span>邮研<small>STUDY WORKBENCH</small></span></a>
+    <div class="nav-caption">学习空间</div>
+    <nav id="navigation"></nav>
+    <div class="sidebar-bottom"><div class="local-tag"><span aria-hidden="true">◈</span> 本地学习空间</div><p>每一次理解，都算数。</p><div class="profile"><span class="avatar">AI</span><div><strong>北邮 · 2025 级</strong><small>人工智能专业</small></div></div></div>
+  </aside>
+  <div class="workspace">
+    <header class="topbar"><div class="breadcrumb"><span>我的工作台</span><span aria-hidden="true">/</span><strong id="page-label">今日学习</strong></div><div class="top-actions"><span id="date-label"></span><button id="quick-add" class="button primary compact">添加任务</button></div></header>
+    <div id="storage-alert" class="storage-alert" role="alert" hidden></div>
+    <main id="main" tabindex="-1"></main>
+    <footer>邮研 · 自编学习内容，按你的实际课程调整。<span>数据与附件保存在本浏览器 · 请完整备份</span></footer>
+  </div>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="task-dialog" aria-labelledby="task-title">
+    <form id="task-form"><div class="dialog-heading"><div><span class="eyebrow">NEXT SMALL STEP</span><h2 id="task-title">添加学习任务</h2></div><button type="button" data-close class="icon-button" aria-label="关闭">×</button></div>
+      <label>要完成什么？<input name="title" maxlength="300" required placeholder="例如：独立完成卡诺图四角合并题"></label>
+      <div class="form-row"><label>课程或方向<select name="course" class="course-select"></select></label><label>截止日期（可留空）<input name="due" type="date"></label></div>
+      <label>优先级<select name="priority"><option value="normal">正常</option><option value="high">优先完成</option><option value="low">有空再做</option></select></label>
+      <p class="form-error" role="alert"></p><div class="dialog-actions"><button type="button" data-close class="button">取消</button><button class="button primary">保存任务</button></div>
+    </form>
+  </dialog>
+  <dialog id="card-dialog" aria-labelledby="card-title">
+    <form id="card-form"><div class="dialog-heading"><div><span class="eyebrow">ACTIVE RECALL</span><h2 id="card-title">记录一张错题卡</h2></div><button type="button" data-close class="icon-button" aria-label="关闭">×</button></div>
+      <label>课程或方向<select name="topic" class="course-select"></select></label>
+      <label>题目 / 想要记住的问题<textarea name="question" rows="3" required maxlength="1000" placeholder="用自己的话写一个可以回答的问题"></textarea></label>
+      <label>答案与易错点<textarea name="answer" rows="5" required maxlength="4000" placeholder="写清关键步骤、出错原因，以及下次如何检查"></textarea></label>
+      <p class="form-error" role="alert"></p><div class="dialog-actions"><button type="button" data-close class="button">取消</button><button class="button primary">加入复习</button></div>
+    </form>
+  </dialog>
+  <dialog id="experience-dialog" aria-labelledby="experience-title">
+    <form id="experience-form"><div class="dialog-heading"><div><span class="eyebrow">KEEP THE EVIDENCE</span><h2 id="experience-title">记录一项经历</h2></div><button type="button" data-close class="icon-button" aria-label="关闭">×</button></div>
+      <label>经历名称<input name="title" maxlength="300" required placeholder="例如：小班学习委员"></label>
+      <div class="form-row"><label>分类<select name="category"><option>学习</option><option>竞赛</option><option>学生工作</option><option>体育</option><option>志愿服务</option><option>科研</option></select></label><label>日期（可留空）<input name="date" type="date"></label></div>
+      <label>具体工作与结果<textarea name="detail" rows="4" maxlength="4000" placeholder="写具体贡献和可核实的结果，不补造奖项或数字"></textarea></label>
+      <label>证明材料位置 / 官方链接<input name="evidence" maxlength="1000" placeholder="只记录位置，文件不会被上传"></label>
+      <p class="form-error" role="alert"></p><div class="dialog-actions"><button type="button" data-close class="button">取消</button><button class="button primary">保存经历</button></div>
+    </form>
+  </dialog>
+  <dialog id="text-dialog" aria-labelledby="text-title"><div class="dialog-heading"><h2 id="text-title">导出内容</h2><button type="button" data-close class="icon-button" aria-label="关闭">×</button></div><p class="muted">可在下方选中全部文字复制，也可下载文件。</p><textarea id="export-text" rows="16" readonly aria-label="导出内容"></textarea><div class="dialog-actions"><button id="text-copy" class="button">复制文字</button><button id="text-download" class="button primary">下载 Markdown</button></div></dialog>
+  <dialog id="batch-dialog" aria-labelledby="batch-title"><div class="dialog-heading"><div><span class="eyebrow">NOTES TO RECALL</span><h2 id="batch-title">批量录入问答卡</h2></div><button data-close class="icon-button" aria-label="关闭">×</button></div><label for="batch-topic">本批课程方向<select id="batch-topic"></select></label><label for="batch-text">问答文本<textarea id="batch-text" rows="9" maxlength="500000" placeholder="问：一个可以独立回答的问题&#10;答：关键步骤与易错点&#10;---&#10;问：下一张卡的问题&#10;答：下一张卡的答案"></textarea></label><p class="hint">每张用“问：/答：”，独立行“---”分隔；答案可多行。每次最多100张，只跳过方向、问题、答案均完全一致的重复卡。</p><div class="data-buttons"><button class="button" data-action="batch-sample">填入格式示例</button><button class="button" data-action="batch-file">读取 UTF-8 文本文件</button><a class="button ghost" href="examples/AI实训复习卡.txt" download>下载12张实训问答</a></div><p id="batch-error" class="form-error" role="alert"></p><div id="batch-preview" aria-live="polite"></div><div class="dialog-actions"><button class="button" data-action="batch-preview">校验并预览</button><button id="batch-commit" class="button primary" data-action="batch-commit" disabled>确认加入复习</button></div></dialog>
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title"><div class="dialog-heading"><h2 id="confirm-title">确认操作</h2><button type="button" data-close class="icon-button" aria-label="关闭">×</button></div><p id="confirm-message"></p><div class="dialog-actions"><button data-close class="button">取消</button><button id="confirm-action" class="button danger">确认</button></div></dialog>
+  <input type="file" id="full-import-file" accept="application/json,.json" hidden>
+  <input type="file" id="import-file" accept="application/json,.json" hidden>
+  <input type="file" id="batch-file" accept="text/plain,text/markdown,.txt,.md" hidden>
+  <script src="core.js"></script><script src="content.js"></script><script src="digits-model.js"></script><script src="digits-lab.js"></script><script src="ai-lab.js"></script><script src="metrics-lab.js"></script><script src="logic-practice.js"></script><script src="logic-circuit.js"></script><script src="card-import.js"></script><script src="textbook-schema.js"></script><script src="vault.js"></script><script src="textbook.js"></script><script src="curriculum-content.js"></script><script src="training-run.js"></script><script src="training-lab.js"></script><script src="curriculum.js"></script><script src="records.js"></script><script src="app.js"></script>
+</body>
+</html>

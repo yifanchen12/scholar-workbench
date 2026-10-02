@@ -1,0 +1,334 @@
+{
+  "seed": 2025,
+  "totalSamples": 1797,
+  "trainPoolSamples": 1437,
+  "testSamples": 360,
+  "normalization": "Each pixel / 16; fixed range, no statistics fitted on test data.",
+  "split": "Stratified random 80/20 split of sklearn load_digits; not a writer-held-out evaluation.",
+  "sklearnVersion": "1.8.0",
+  "models": {
+    "linear": {
+      "trainAccuracy": 0.9895615866388309,
+      "testAccuracy": 0.975,
+      "testLogLoss": 0.12043338682904614,
+      "confusionMatrix": [
+        [
+          36,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          37,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          35,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          34,
+          0,
+          0,
+          0,
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          0,
+          35,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          32,
+          1,
+          0,
+          0,
+          2
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          36,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          36,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          35,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          35
+        ]
+      ],
+      "iterations": 85,
+      "testErrors": 9
+    },
+    "network": {
+      "trainAccuracy": 0.9826026443980515,
+      "testAccuracy": 0.9777777777777777,
+      "testLogLoss": 0.11062749017492589,
+      "confusionMatrix": [
+        [
+          36,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          37,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          35,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          35,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          35,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          1,
+          0,
+          33,
+          1,
+          0,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          36,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          36,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          35,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          34
+        ]
+      ],
+      "iterations": 97,
+      "testErrors": 8
+    }
+  },
+  "testUsedForModelSelection": false,
+  "notes": [
+    "Both fixed model configurations trained once.",
+    "MLP early stopping uses only a validation subset of the training pool.",
+    "Softmax outputs are not calibrated confidence guarantees for new handwriting.",
+    "This is not MNIST."
+  ],
+  "source": {
+    "title": "Optical Recognition of Handwritten Digits",
+    "authors": [
+      "E. Alpaydin",
+      "C. Kaynak"
+    ],
+    "year": 1998,
+    "doi": "10.24432/C50P49",
+    "url": "https://archive.ics.uci.edu/dataset/80/optical+recognition+of+handwritten+digits",
+    "license": "CC BY 4.0",
+    "licenseURL": "https://creativecommons.org/licenses/by/4.0/",
+    "adaptation": "Models trained on a new random split of sklearn load_digits; selected test samples are displayed as pixel arrays."
+  },
+  "configuration": {
+    "linear": {
+      "C": 2.0,
+      "class_weight": null,
+      "dual": false,
+      "fit_intercept": true,
+      "intercept_scaling": 1,
+      "l1_ratio": 0.0,
+      "max_iter": 2000,
+      "n_jobs": null,
+      "penalty": "deprecated",
+      "random_state": 2025,
+      "solver": "lbfgs",
+      "tol": 0.0001,
+      "verbose": 0,
+      "warm_start": false
+    },
+    "network": {
+      "activation": "relu",
+      "alpha": 0.0005,
+      "batch_size": 64,
+      "beta_1": 0.9,
+      "beta_2": 0.999,
+      "early_stopping": true,
+      "epsilon": 1e-08,
+      "hidden_layer_sizes": [
+        32
+      ],
+      "learning_rate": "constant",
+      "learning_rate_init": 0.001,
+      "max_fun": 15000,
+      "max_iter": 300,
+      "momentum": 0.9,
+      "n_iter_no_change": 20,
+      "nesterovs_momentum": true,
+      "power_t": 0.5,
+      "random_state": 2025,
+      "shuffle": true,
+      "solver": "adam",
+      "tol": 0.0001,
+      "validation_fraction": 0.15,
+      "verbose": false,
+      "warm_start": false
+    }
+  }
+}

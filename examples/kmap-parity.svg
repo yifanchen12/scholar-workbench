@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="704" height="1059" viewBox="0 0 704 1059" role="img"><title>卡诺图分组与化简结果</title><desc>每种颜色表示一个卡诺组。同色分段框表示跨边界相邻，格子中的编号表示参与的组。</desc><rect width="100%" height="100%" fill="#fff"/><g font-family="Segoe UI,Microsoft YaHei,sans-serif">
+<text x="32" y="42" font-size="26" fill="#172b49" >卡诺图 · 分组与化简</text>
+<text x="32" y="78" font-size="24" fill="#245cd8" >F = A&apos;·B&apos;·C&apos;·D + A&apos;·B&apos;·C·D&apos; + A&apos;·B·C&apos;·D&apos;</text>
+<text x="32" y="114" font-size="24" fill="#245cd8" >+ A&apos;·B·C·D + A·B&apos;·C&apos;·D&apos; + A·B&apos;·C·D + A·B·C&apos;·D</text>
+<text x="32" y="150" font-size="24" fill="#245cd8" >+ A·B·C·D&apos;</text>
+<text x="100" y="184" font-size="16" fill="#64748b" text-anchor="end">AB \ CD</text>
+<text x="176" y="184" font-size="18" fill="#64748b" text-anchor="middle">00</text>
+<text x="312" y="184" font-size="18" fill="#64748b" text-anchor="middle">01</text>
+<text x="448" y="184" font-size="18" fill="#64748b" text-anchor="middle">11</text>
+<text x="584" y="184" font-size="18" fill="#64748b" text-anchor="middle">10</text>
+<text x="88" y="258" font-size="18" fill="#64748b" text-anchor="end">00</text>
+<rect x="112" y="202" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="125" y="225" font-size="13" fill="#64748b" >m0</text>
+<text x="176" y="262" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="248" y="202" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="261" y="225" font-size="13" fill="#64748b" >m1</text>
+<text x="312" y="262" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="312" y="286" font-size="15" fill="#245cd8" text-anchor="middle" font-weight="700">1</text>
+<rect x="384" y="202" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="397" y="225" font-size="13" fill="#64748b" >m3</text>
+<text x="448" y="262" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="520" y="202" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="533" y="225" font-size="13" fill="#64748b" >m2</text>
+<text x="584" y="262" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="584" y="286" font-size="15" fill="#ab5919" text-anchor="middle" font-weight="700">2</text>
+<text x="88" y="366" font-size="18" fill="#64748b" text-anchor="end">01</text>
+<rect x="112" y="310" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="125" y="333" font-size="13" fill="#64748b" >m4</text>
+<text x="176" y="370" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="176" y="394" font-size="15" fill="#007b70" text-anchor="middle" font-weight="700">3</text>
+<rect x="248" y="310" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="261" y="333" font-size="13" fill="#64748b" >m5</text>
+<text x="312" y="370" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="384" y="310" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="397" y="333" font-size="13" fill="#64748b" >m7</text>
+<text x="448" y="370" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="448" y="394" font-size="15" fill="#914bc2" text-anchor="middle" font-weight="700">4</text>
+<rect x="520" y="310" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="533" y="333" font-size="13" fill="#64748b" >m6</text>
+<text x="584" y="370" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<text x="88" y="474" font-size="18" fill="#64748b" text-anchor="end">11</text>
+<rect x="112" y="418" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="125" y="441" font-size="13" fill="#64748b" >m12</text>
+<text x="176" y="478" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="248" y="418" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="261" y="441" font-size="13" fill="#64748b" >m13</text>
+<text x="312" y="478" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="312" y="502" font-size="15" fill="#6655b5" text-anchor="middle" font-weight="700">7</text>
+<rect x="384" y="418" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="397" y="441" font-size="13" fill="#64748b" >m15</text>
+<text x="448" y="478" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="520" y="418" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="533" y="441" font-size="13" fill="#64748b" >m14</text>
+<text x="584" y="478" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="584" y="502" font-size="15" fill="#466881" text-anchor="middle" font-weight="700">8</text>
+<text x="88" y="582" font-size="18" fill="#64748b" text-anchor="end">10</text>
+<rect x="112" y="526" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="125" y="549" font-size="13" fill="#64748b" >m8</text>
+<text x="176" y="586" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="176" y="610" font-size="15" fill="#b53b66" text-anchor="middle" font-weight="700">5</text>
+<rect x="248" y="526" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="261" y="549" font-size="13" fill="#64748b" >m9</text>
+<text x="312" y="586" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="384" y="526" width="128" height="100" rx="8" fill="#f0f5ff" stroke="#dce5f1"/>
+<text x="397" y="549" font-size="13" fill="#64748b" >m11</text>
+<text x="448" y="586" font-size="30" fill="#172b49" text-anchor="middle">1</text>
+<text x="448" y="610" font-size="15" fill="#45754f" text-anchor="middle" font-weight="700">6</text>
+<rect x="520" y="526" width="128" height="100" rx="8" fill="#fafcff" stroke="#dce5f1"/>
+<text x="533" y="549" font-size="13" fill="#64748b" >m10</text>
+<text x="584" y="586" font-size="30" fill="#172b49" text-anchor="middle">0</text>
+<rect x="251" y="205" width="122" height="94" rx="15" fill="none" stroke="#245cd8" stroke-width="2.7" />
+<text x="32" y="682" font-size="17" fill="#245cd8" >1  m(1) → A&apos;·B&apos;·C&apos;·D</text>
+<rect x="526" y="208" width="116" height="88" rx="15" fill="none" stroke="#ab5919" stroke-width="2.7" />
+<text x="32" y="716" font-size="17" fill="#ab5919" >2  m(2) → A&apos;·B&apos;·C·D&apos;</text>
+<rect x="121" y="319" width="110" height="82" rx="15" fill="none" stroke="#007b70" stroke-width="2.7" />
+<text x="32" y="750" font-size="17" fill="#007b70" >3  m(4) → A&apos;·B·C&apos;·D&apos;</text>
+<rect x="396" y="322" width="104" height="76" rx="15" fill="none" stroke="#914bc2" stroke-width="2.7" />
+<text x="32" y="784" font-size="17" fill="#914bc2" >4  m(7) → A&apos;·B·C·D</text>
+<rect x="115" y="529" width="122" height="94" rx="15" fill="none" stroke="#b53b66" stroke-width="2.7" />
+<text x="32" y="818" font-size="17" fill="#b53b66" >5  m(8) → A·B&apos;·C&apos;·D&apos;</text>
+<rect x="390" y="532" width="116" height="88" rx="15" fill="none" stroke="#45754f" stroke-width="2.7" />
+<text x="32" y="852" font-size="17" fill="#45754f" >6  m(11) → A·B&apos;·C·D</text>
+<rect x="257" y="427" width="110" height="82" rx="15" fill="none" stroke="#6655b5" stroke-width="2.7" />
+<text x="32" y="886" font-size="17" fill="#6655b5" >7  m(13) → A·B·C&apos;·D</text>
+<rect x="532" y="430" width="104" height="76" rx="15" fill="none" stroke="#466881" stroke-width="2.7" />
+<text x="32" y="920" font-size="17" fill="#466881" >8  m(14) → A·B·C·D&apos;</text>
+<text x="32" y="1002" font-size="14" fill="#64748b" >同色虚线框：跨边界同一组；数字：组号。</text>
+<text x="32" y="1030" font-size="14" fill="#64748b" >最少项数 → 最少文字数 · 真值验证通过</text>
+</g></svg>

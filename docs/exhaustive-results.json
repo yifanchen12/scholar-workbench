@@ -1,0 +1,9 @@
+{
+  "fourVariableFunctions": 65536,
+  "threeVariableTernaryConstraints": 6561,
+  "truthRowsIndependentlyChecked": 1083568,
+  "optimalCostsIndependentlyChecked": 72097,
+  "independentOptimalityMethod": "Forward DP over all truth-mask unions of elementary cubes; 100*terms+literals. Ternary constraints minimize over all allowed completions.",
+  "elapsedSeconds": 6.934,
+  "passed": true
+}

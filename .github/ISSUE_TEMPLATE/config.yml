@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability privately / 私密报告漏洞
+    url: https://github.com/yifanchen12/scholar-workbench/security/advisories/new
+    about: Never put API keys, private evidence, backups or exploit details in a public issue.

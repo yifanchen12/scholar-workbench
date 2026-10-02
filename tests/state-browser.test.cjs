@@ -1,0 +1,30 @@
+'use strict';
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const C=require('../core');
+const {chromium}=require('./browser-runtime.cjs').playwright;
+const base=process.env.STUDY_URL || 'http://127.0.0.1:5179';
+(async()=>{
+  const browser=await chromium.launch({headless:true,executablePath:process.env.BROWSER_PATH||undefined});
+  try{
+    const s=C.initialState();s.tasks=[{id:'original',title:'既有任务',course:'人工智能基础',due:'',priority:'normal',done:false,createdAt:1}];
+    const context=await browser.newContext({acceptDownloads:true});await context.addInitScript(value=>{if(!localStorage.getItem('youyan.study.v1'))localStorage.setItem('youyan.study.v1',JSON.stringify(value));},s);
+    const page=await context.newPage();await page.goto(base+'/#data');const original=await page.evaluate(()=>localStorage.getItem('youyan.study.v1'));
+    const conflict={...s,cards:[{id:'digital-gray',question:'冲突ID',answer:'不能共享原卡进度',topic:'人工智能基础'}]};
+    await page.locator('#import-file').setInputFiles({name:'conflict.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(conflict))});assert.match(await page.locator('#toast').textContent(),/无法导入/);assert.equal(await page.locator('#confirm-dialog').evaluate(el=>el.open),false);assert.equal(await page.evaluate(()=>localStorage.getItem('youyan.study.v1')),original);
+    for(const id of ['toString','valueOf']){const reserved={...s,cards:[{id,question:'继承成员不能当作已有复习记录',answer:'保留旧数据',topic:'人工智能基础'}]};await page.locator('#import-file').setInputFiles({name:'reserved.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(reserved))});assert.equal(await page.locator('#confirm-dialog').evaluate(el=>el.open),false);assert.equal(await page.evaluate(()=>localStorage.getItem('youyan.study.v1')),original);}
+    const orphan={...s,reviews:{missing:{level:0,dueAt:1,lastAt:1,attempts:1,lapses:0}}};C.validateState(orphan);await page.locator('#import-file').setInputFiles({name:'orphan.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(orphan))});assert.equal(await page.locator('#confirm-dialog').evaluate(el=>el.open),false);assert.equal(await page.evaluate(()=>localStorage.getItem('youyan.study.v1')),original);
+    const impossible={...s,tasks:s.tasks.map(t=>({...t,createdAt:1e308}))};await page.locator('#import-file').setInputFiles({name:'invalid-time.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(impossible))});assert.equal(await page.evaluate(()=>localStorage.getItem('youyan.study.v1')),original);
+    const replacement={...s,tasks:s.tasks.map(t=>({...t,title:'带BOM备份'}))};await page.locator('#import-file').setInputFiles({name:'bom.json',mimeType:'application/json',buffer:Buffer.from('\uFEFF'+JSON.stringify(replacement))});assert.equal(await page.locator('#confirm-dialog').evaluate(el=>el.open),true);assert.equal(await page.evaluate(()=>localStorage.getItem('youyan.study.v1')),original);const backup=page.waitForEvent('download');await page.locator('#confirm-action').click();assert.deepEqual(JSON.parse(fs.readFileSync(await (await backup).path(),'utf8')).tasks,s.tasks);assert.equal(await page.evaluate(()=>JSON.parse(localStorage.getItem('youyan.study.v1')).tasks[0].title),'带BOM备份');
+    const expired=C.initialState();expired.timer={id:'elapsed',status:'running',endsAt:Date.now()-1,remainingSeconds:60,minutes:1,topic:'存储失败的完成片段'};
+    const blocked=await browser.newContext({acceptDownloads:true});await blocked.addInitScript(value=>{localStorage.setItem('youyan.study.v1',JSON.stringify(value));Storage.prototype.setItem=function(){throw new DOMException('Quota exceeded','QuotaExceededError');};},expired);
+    const blockedPage=await blocked.newPage();await blockedPage.goto(base);assert.match(await blockedPage.locator('#toast').textContent(),/当前记录仅在页面中/);assert.match(await blockedPage.locator('#storage-alert').textContent(),/保存失败/);await blockedPage.goto(base+'/#data');const download=blockedPage.waitForEvent('download');await blockedPage.locator('[data-action="backup"]').click();const exported=JSON.parse(fs.readFileSync(await (await download).path(),'utf8'));assert.equal(exported.sessions.length,1);assert.equal(exported.sessions[0].id,'elapsed');assert.equal(exported.timer,null);C.validateState(exported);
+    const now=Date.now(),shifted=C.initialState();shifted.timer={id:'clock-shifted',status:'running',endsAt:now+70000,remainingSeconds:10,minutes:1,topic:'系统时钟后调的恢复片段'};
+    const shiftedContext=await browser.newContext();await shiftedContext.addInitScript(({value,now})=>{Date.now=()=>now;if(!localStorage.getItem('youyan.study.v1'))localStorage.setItem('youyan.study.v1',JSON.stringify(value));},{value:shifted,now});
+    const shiftedPage=await shiftedContext.newPage();await shiftedPage.goto(base);assert.equal(await shiftedPage.locator('#timer-digits').textContent(),'00:10');await shiftedPage.getByRole('button',{name:'暂停',exact:true}).click();
+    const paused=await shiftedPage.evaluate(()=>JSON.parse(localStorage.getItem('youyan.study.v1')));C.validateState(paused);assert.equal(paused.timer.remainingSeconds,10);assert.equal(paused.timer.status,'paused');
+    await shiftedPage.reload();assert.equal(await shiftedPage.locator('#timer-digits').textContent(),'00:10');assert.equal(await shiftedPage.locator('#storage-alert').isVisible(),false);await shiftedPage.getByRole('button',{name:'继续专注',exact:true}).click();
+    const resumed=await shiftedPage.evaluate(()=>JSON.parse(localStorage.getItem('youyan.study.v1')));C.validateState(resumed);assert.equal(resumed.timer.endsAt,now+10000);assert.equal(resumed.timer.remainingSeconds,10);
+    console.log('State browser checks passed: reserved card IDs and invalid dates rejected without writes; BOM backup validates before replacement and preserves old backup; unsaved timer completion remains exportable; clock rollback preserves the saved remaining-time cap and a valid pause/reload/resume backup.');
+  }finally{await browser.close();}
+})().catch(e=>{console.error(e.stack);process.exit(1);});

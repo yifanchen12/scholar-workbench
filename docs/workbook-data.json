@@ -1,0 +1,603 @@
+{
+  "problems": [
+    {
+      "id": "corners",
+      "title": "练习1：跨边界的四角",
+      "n": 4,
+      "ones": [
+        0,
+        2,
+        8,
+        10
+      ],
+      "dc": [],
+      "prompt": "画出卡诺图，标出一个四格组，写出被消去的变量。",
+      "reason": "四角中B=0、D=0恒定；A和C在组内变化，因此消去A和C。",
+      "result": {
+        "n": 4,
+        "ones": [
+          0,
+          2,
+          8,
+          10
+        ],
+        "dontCares": [],
+        "primes": [
+          {
+            "pattern": "-0-0",
+            "cells": [
+              0,
+              2,
+              8,
+              10
+            ],
+            "mask": 1285,
+            "onMask": 1285,
+            "literals": 2,
+            "text": "B'·D'",
+            "latex": "\\overline{B}\\overline{D}"
+          }
+        ],
+        "selected": [
+          {
+            "pattern": "-0-0",
+            "cells": [
+              0,
+              2,
+              8,
+              10
+            ],
+            "mask": 1285,
+            "onMask": 1285,
+            "literals": 2,
+            "text": "B'·D'",
+            "latex": "\\overline{B}\\overline{D}"
+          }
+        ],
+        "expression": "B'·D'",
+        "latex": "\\overline{B}\\overline{D}",
+        "literals": 2,
+        "table": [
+          {
+            "value": 0,
+            "bits": "0000",
+            "expected": 1,
+            "actual": 1
+          },
+          {
+            "value": 1,
+            "bits": "0001",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 2,
+            "bits": "0010",
+            "expected": 1,
+            "actual": 1
+          },
+          {
+            "value": 3,
+            "bits": "0011",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 4,
+            "bits": "0100",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 5,
+            "bits": "0101",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 6,
+            "bits": "0110",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 7,
+            "bits": "0111",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 8,
+            "bits": "1000",
+            "expected": 1,
+            "actual": 1
+          },
+          {
+            "value": 9,
+            "bits": "1001",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 10,
+            "bits": "1010",
+            "expected": 1,
+            "actual": 1
+          },
+          {
+            "value": 11,
+            "bits": "1011",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 12,
+            "bits": "1100",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 13,
+            "bits": "1101",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 14,
+            "bits": "1110",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 15,
+            "bits": "1111",
+            "expected": 0,
+            "actual": 0
+          }
+        ],
+        "verified": true
+      }
+    },
+    {
+      "id": "overlap",
+      "title": "练习2：同一格可以重复使用",
+      "n": 4,
+      "ones": [
+        5,
+        6,
+        7,
+        10,
+        11,
+        14,
+        15
+      ],
+      "dc": [],
+      "prompt": "用尽可能少的乘积项覆盖全部1。说明为什么重叠分组是允许的。",
+      "reason": "其中AC、BC各为一个四格组；m5与m7形成一组，得到A'BD。m7、m14、m15等可参与不止一个组。",
+      "result": {
+        "n": 4,
+        "ones": [
+          5,
+          6,
+          7,
+          10,
+          11,
+          14,
+          15
+        ],
+        "dontCares": [],
+        "primes": [
+          {
+            "pattern": "-11-",
+            "cells": [
+              6,
+              7,
+              14,
+              15
+            ],
+            "mask": 49344,
+            "onMask": 49344,
+            "literals": 2,
+            "text": "B·C",
+            "latex": "BC"
+          },
+          {
+            "pattern": "01-1",
+            "cells": [
+              5,
+              7
+            ],
+            "mask": 160,
+            "onMask": 160,
+            "literals": 3,
+            "text": "A'·B·D",
+            "latex": "\\overline{A}BD"
+          },
+          {
+            "pattern": "1-1-",
+            "cells": [
+              10,
+              11,
+              14,
+              15
+            ],
+            "mask": 52224,
+            "onMask": 52224,
+            "literals": 2,
+            "text": "A·C",
+            "latex": "AC"
+          }
+        ],
+        "selected": [
+          {
+            "pattern": "-11-",
+            "cells": [
+              6,
+              7,
+              14,
+              15
+            ],
+            "mask": 49344,
+            "onMask": 49344,
+            "literals": 2,
+            "text": "B·C",
+            "latex": "BC"
+          },
+          {
+            "pattern": "01-1",
+            "cells": [
+              5,
+              7
+            ],
+            "mask": 160,
+            "onMask": 160,
+            "literals": 3,
+            "text": "A'·B·D",
+            "latex": "\\overline{A}BD"
+          },
+          {
+            "pattern": "1-1-",
+            "cells": [
+              10,
+              11,
+              14,
+              15
+            ],
+            "mask": 52224,
+            "onMask": 52224,
+            "literals": 2,
+            "text": "A·C",
+            "latex": "AC"
+          }
+        ],
+        "expression": "B·C + A'·B·D + A·C",
+        "latex": "BC+\\overline{A}BD+AC",
+        "literals": 7,
+        "table": [
+          {
+            "value": 0,
+            "bits": "0000",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 1,
+            "bits": "0001",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 2,
+            "bits": "0010",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 3,
+            "bits": "0011",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 4,
+            "bits": "0100",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 5,
+            "bits": "0101",
+            "expected": 1,
+            "actual": 1
+          },
+          {
+            "value": 6,
+            "bits": "0110",
+            "expected": 1,
+            "actual": 1
+          },
+          {
+            "value": 7,
+            "bits": "0111",
+            "expected": 1,
+            "actual": 1
+          },
+          {
+            "value": 8,
+            "bits": "1000",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 9,
+            "bits": "1001",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 10,
+            "bits": "1010",
+            "expected": 1,
+            "actual": 1
+          },
+          {
+            "value": 11,
+            "bits": "1011",
+            "expected": 1,
+            "actual": 1
+          },
+          {
+            "value": 12,
+            "bits": "1100",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 13,
+            "bits": "1101",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 14,
+            "bits": "1110",
+            "expected": 1,
+            "actual": 1
+          },
+          {
+            "value": 15,
+            "bits": "1111",
+            "expected": 1,
+            "actual": 1
+          }
+        ],
+        "verified": true
+      }
+    },
+    {
+      "id": "dontcares",
+      "title": "练习3：利用无关项",
+      "n": 3,
+      "ones": [
+        0,
+        1,
+        2,
+        4
+      ],
+      "dc": [
+        5,
+        6
+      ],
+      "prompt": "只使用能帮助扩组的无关项，写出最简与或式。检查无关项输出是否必须为1。",
+      "reason": "m5帮助B'扩成四格，m6帮助C'扩成四格。无关项上的输出无需强制等于0或1，不必全部覆盖。",
+      "result": {
+        "n": 3,
+        "ones": [
+          0,
+          1,
+          2,
+          4
+        ],
+        "dontCares": [
+          5,
+          6
+        ],
+        "primes": [
+          {
+            "pattern": "--0",
+            "cells": [
+              0,
+              2,
+              4,
+              6
+            ],
+            "mask": 85,
+            "onMask": 21,
+            "literals": 1,
+            "text": "C'",
+            "latex": "\\overline{C}"
+          },
+          {
+            "pattern": "-0-",
+            "cells": [
+              0,
+              1,
+              4,
+              5
+            ],
+            "mask": 51,
+            "onMask": 19,
+            "literals": 1,
+            "text": "B'",
+            "latex": "\\overline{B}"
+          }
+        ],
+        "selected": [
+          {
+            "pattern": "--0",
+            "cells": [
+              0,
+              2,
+              4,
+              6
+            ],
+            "mask": 85,
+            "onMask": 21,
+            "literals": 1,
+            "text": "C'",
+            "latex": "\\overline{C}"
+          },
+          {
+            "pattern": "-0-",
+            "cells": [
+              0,
+              1,
+              4,
+              5
+            ],
+            "mask": 51,
+            "onMask": 19,
+            "literals": 1,
+            "text": "B'",
+            "latex": "\\overline{B}"
+          }
+        ],
+        "expression": "C' + B'",
+        "latex": "\\overline{C}+\\overline{B}",
+        "literals": 2,
+        "table": [
+          {
+            "value": 0,
+            "bits": "000",
+            "expected": 1,
+            "actual": 1
+          },
+          {
+            "value": 1,
+            "bits": "001",
+            "expected": 1,
+            "actual": 1
+          },
+          {
+            "value": 2,
+            "bits": "010",
+            "expected": 1,
+            "actual": 1
+          },
+          {
+            "value": 3,
+            "bits": "011",
+            "expected": 0,
+            "actual": 0
+          },
+          {
+            "value": 4,
+            "bits": "100",
+            "expected": 1,
+            "actual": 1
+          },
+          {
+            "value": 5,
+            "bits": "101",
+            "expected": "×",
+            "actual": 1
+          },
+          {
+            "value": 6,
+            "bits": "110",
+            "expected": "×",
+            "actual": 1
+          },
+          {
+            "value": 7,
+            "bits": "111",
+            "expected": 0,
+            "actual": 0
+          }
+        ],
+        "verified": true
+      }
+    }
+  ],
+  "ai": {
+    "train": [
+      {
+        "x": -2,
+        "y": -3
+      },
+      {
+        "x": -1,
+        "y": -0.8
+      },
+      {
+        "x": 0,
+        "y": 1
+      },
+      {
+        "x": 1,
+        "y": 3.1
+      },
+      {
+        "x": 2,
+        "y": 4.8
+      },
+      {
+        "x": 3,
+        "y": 7.2
+      }
+    ],
+    "initial": {
+      "loss": 7.927499999999999,
+      "mse": 15.854999999999999,
+      "dw": -6.8500000000000005,
+      "db": -2.0500000000000003,
+      "errors": [
+        3,
+        0.8,
+        -1,
+        -3.1,
+        -4.8,
+        -7.2
+      ]
+    },
+    "first": {
+      "w": 0.685,
+      "b": 0.20500000000000004,
+      "before": {
+        "loss": 7.927499999999999,
+        "mse": 15.854999999999999,
+        "dw": -6.8500000000000005,
+        "db": -2.0500000000000003,
+        "errors": [
+          3,
+          0.8,
+          -1,
+          -3.1,
+          -4.8,
+          -7.2
+        ]
+      },
+      "after": {
+        "loss": 3.6491645833333326,
+        "mse": 7.298329166666665,
+        "dw": -4.578333333333333,
+        "db": -1.5024999999999997,
+        "errors": [
+          1.835,
+          0.32000000000000006,
+          -0.7949999999999999,
+          -2.21,
+          -3.2249999999999996,
+          -4.9399999999999995
+        ]
+      }
+    },
+    "optimal": {
+      "w": 1.9971428571428573,
+      "b": 1.0514285714285716,
+      "unique": true,
+      "loss": 0.009571428571428583
+    },
+    "bound": 0.610410224955637
+  }
+}
