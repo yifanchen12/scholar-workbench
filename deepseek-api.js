@@ -37,13 +37,18 @@ async function generate(input,fetcher=fetch,signal){
   const content=schema.validate(data,input.kind,input.pages.map(p=>p.page));
   return {content,usage:{promptTokens:Number(envelope.usage?.prompt_tokens)||0,completionTokens:Number(envelope.usage?.completion_tokens)||0},model:input.model};
 }
+function connectionErrorMessage(error){
+  const causes=[error.cause,...(error.cause?.errors||[])];
+  if(causes.some(c=>['EACCES','EPERM'].includes(c?.code)))return '本地服务没有联网权限（EACCES/EPERM）。请在普通终端运行 node server.js，或允许服务进程联网，然后重新生成。';
+  return '无法连接 API，请检查 Base URL、网络及学校接口所需的 VPN 后重试。';
+}
 async function handle(req,res,origin){
   const send=(status,data)=>{if(!res.destroyed){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store','X-Content-Type-Options':'nosniff'});res.end(JSON.stringify(data));}};
   if(req.method!=='POST')return send(405,{error:'仅支持POST。'});
   if(req.headers.origin!==origin||req.headers.host!==new URL(origin).host||req.headers['content-type']!=='application/json')return send(403,{error:'只接受工作台本地页面的JSON请求。'});
   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),180000);res.on('close',()=>controller.abort());
   try{let size=0,chunks=[];for await(const chunk of req){size+=chunk.length;if(size>LIMIT){send(413,{error:'请求过大，请缩小教材范围。'});return;}chunks.push(chunk);}let input;try{input=JSON.parse(Buffer.concat(chunks).toString('utf8'));}catch{throw new Error('请求JSON无效。');}send(200,await generate(input,fetch,controller.signal));}
-  catch(error){send(error.status||400,{error:controller.signal.aborted?'请求超时或已取消，请缩小页码范围后重试。':error instanceof TypeError?'无法连接 API，请检查 Base URL、网络及学校接口所需的 VPN 后重试。':error.message});}
+  catch(error){send(error.status||400,{error:controller.signal.aborted?'请求超时或已取消，请缩小页码范围后重试。':error instanceof TypeError?connectionErrorMessage(error):error.message});}
   finally{clearTimeout(timer);}
 }
-module.exports={handle,generate,validateInput,chatEndpoint};
+module.exports={handle,generate,validateInput,chatEndpoint,connectionErrorMessage};

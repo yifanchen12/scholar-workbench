@@ -1,12 +1,15 @@
 'use strict';
 const assert=require('node:assert/strict');
 const http=require('node:http');
-const {generate,validateInput,chatEndpoint}=require('../deepseek-api.js');
+const {generate,validateInput,chatEndpoint,connectionErrorMessage}=require('../deepseek-api.js');
 const schema=require('../textbook-schema.js');
 const fakeKey='test-only-placeholder';
 const input={key:fakeKey,model:'deepseek-flash',kind:'outline',title:'测试书',goal:'解释',pages:[{page:1,text:'第一章 概率'},{page:2,text:'第二章 学习'}]};
 const outline={title:'测试书',sections:[{title:'概率',start:1,end:2,summary:'基础'}]};
 (async()=>{
+  assert.match(connectionErrorMessage(new TypeError('fetch failed',{cause:{code:'EACCES'}})),/没有联网权限/);
+  assert.match(connectionErrorMessage(new TypeError('fetch failed',{cause:{errors:[{code:'EPERM'}]}})),/没有联网权限/);
+  assert.match(connectionErrorMessage(new TypeError('fetch failed',{cause:{code:'ENOTFOUND'}})),/Base URL/);
   let body;
   const output=await generate(input,async(url,options)=>{assert.equal(url,'https://api.deepseek.com/chat/completions');assert.equal(options.headers.Authorization,'Bearer '+fakeKey);body=JSON.parse(options.body);return {ok:true,text:async()=>JSON.stringify({choices:[{finish_reason:'stop',message:{content:JSON.stringify(outline)}}],usage:{prompt_tokens:100,completion_tokens:20}})};});
   assert.deepEqual(output.content,outline);assert.equal(body.response_format.type,'json_object');assert(!JSON.stringify(body).includes(fakeKey));

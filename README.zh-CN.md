@@ -62,6 +62,8 @@ Base URL 填写示例（学校域名为演示，请替换为学校提供的地�
 
 接口须兼容 Bearer 认证、非流式 Chat Completions、`response_format: {"type":"json_object"}` 和所需输出 token 预算。模型 ID 按学校提供填写，支持 `/`、`:`。需要校园网/VPN 时先连接。地址只能用 HTTP(S)，不得含账号密码、查询参数或片段。优先 HTTPS；HTTP 会明文发送密钥与教材文字，仅用于明确可信的本机/校园接口。不跟随重定向，请直接填写最终地址。接收数据与密钥的是所选服务，不一定是 DeepSeek。
 
+若连接报错包含 `EACCES/EPERM`，说明本机策略禁止 Node.js 进程联网。停止该服务，在普通终端运行 `node server.js`，或允许该进程对外联网。这类失败发生在收到 API HTTP 响应之前，不能判断密钥或模型是否有效。未认证请求返回 `401` 只说明地址可达，不代表带真实密钥的生成已成功。
+
 ## AI 训练实训
 
 基础 Python 实验使用标准库；小型语言模型要求 **Python 3.10+、PyTorch 2.2+**。建议使用独立虚拟环境，按 [PyTorch 官方安装页](https://pytorch.org/get-started/locally/) 选择适合操作系统的命令。
