@@ -8,7 +8,8 @@
 *.yml text eol=lf
 *.html text eol=lf
 *.css text eol=lf
-*.cmd text eol=crlf
+# Keep actual CRLF bytes in repository archives as well as working trees.
+*.cmd -text whitespace=cr-at-eol
 *.pdf binary
 *.png binary
 *.zip binary

@@ -50,7 +50,9 @@ jobs:
           npm ci --no-audit --no-fund
           npm install --no-save --package-lock=false playwright@1.62.1
       - name: Real native file drop and browser data migration
-        run: node tests/desktop.test.cjs
+        run: |
+          node tests/desktop-launcher.test.cjs
+          node tests/desktop.test.cjs
   teaching-model:
     runs-on: ubuntu-latest
     timeout-minutes: 15

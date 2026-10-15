@@ -11,5 +11,5 @@ try{executable=require('electron');}catch{
   executable=require('electron');
 }
 const env={...process.env};delete env.ELECTRON_RUN_AS_NODE;delete env.NODE_OPTIONS;
-const child=spawn(executable,[path.join(root,'desktop/main.cjs')],{cwd:root,env,detached:true,stdio:'ignore',windowsHide:true});
+const child=spawn(executable,[path.join(root,'desktop/main.cjs')],{cwd:root,env,detached:true,stdio:'ignore',windowsHide:false});
 child.on('error',()=>{console.error('桌面程序启动失败。');process.exitCode=1;});child.on('spawn',()=>child.unref());
