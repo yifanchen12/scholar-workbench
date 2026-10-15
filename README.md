@@ -21,7 +21,7 @@ This independent educational project grew out of university AI study needs. It h
 
 ## Run locally
 
-Requires **Node.js 18+** and a modern browser with ES modules, Web Workers and IndexedDB. Use a maintained Node.js LTS release; the compatibility minimum does not imply security support for old releases. No npm installation is needed to run the application.
+Browser mode requires **Node.js 18+** and a modern browser with ES modules, Web Workers and IndexedDB. Use a maintained Node.js LTS release; the compatibility minimum does not imply security support for old releases. Browser mode needs no npm dependencies. The optional desktop entry requires **Node.js 22.12+** and the pinned Electron runtime.
 
 ```sh
 git clone https://github.com/yifanchen12/scholar-workbench.git
@@ -39,6 +39,14 @@ node server.js
 ```
 
 Use one stable browser origin. `file:`, `localhost`, `127.0.0.1` and different ports do not share storage. Export a full backup before changing addresses. Opening HTML directly is not equivalent to running the server. The server binds to `127.0.0.1`, for one person on their own machine, without public-network access or multi-user authentication.
+
+### Desktop: drop evidence without typing paths
+
+On Windows, double-click **`启动桌面工作台.cmd`**. The first launch installs the locked desktop dependency with npm and downloads its Electron binary; allow network access and keep that first installation window open. Subsequent launches use the installed runtime. The desktop window starts or reuses the local server automatically. Other systems can run `npm ci` followed by `npm run desktop`; native integration acceptance is currently on Windows.
+
+If you already have browser records, click **“启用直接拖入”** in the browser's activity section or form to bring existing records and the current unsaved activity form into the desktop window. Install the desktop runtime first if this is a fresh clone. The source browser data remains intact. An existing desktop workspace is backed up before replacement after confirmation; records are not merged. Files previously dropped in a browser must be dropped once into the desktop window to obtain their real paths.
+
+Desktop data is held in `.desktop-user-data/` beside the project, independently of browser profiles. It is ignored by Git and excluded from release archives. Keep using the same desktop directory, and export a full backup before moving it.
 
 ## Learn from a PDF
 
@@ -85,7 +93,9 @@ The bundled example is an actual CPU run. **Low loss is not general capability. 
 
 ## Records, limits and backups
 
-Record activity, organizer, award, date and your contribution, then drag in documents/photos or click the drop zone. **New evidence saves only original file paths, without copying, uploading or reading file contents.** Browser drops expose filenames, not real absolute paths: paste each original path using Windows “Copy as path” (Ctrl+Shift+C), or click the drop zone to choose original files through the local Windows system dialog. Multiple pasted paths use one line per file. On other platforms, use manual path entry. A pending filename without a complete path cannot be saved; `C:\fakepath` is rejected.
+Record activity, organizer, award, date and your contribution, then **drop documents/photos into the desktop form to add them immediately**. No path entry or separate attachment confirmation is required. Clicking the drop zone also supports multiple original files. **New evidence saves only original file paths, without copying, uploading or reading file contents.** Save the activity when its fields are complete. Unsaved/in-memory images have no original disk path and must first be saved outside the application.
+
+Browser mode offers a Windows system picker and an expandable manual-path fallback because browser drops expose filenames without real absolute paths. Use the desktop entry for direct drag-and-drop. A pending filename without a complete path cannot be saved; `C:\fakepath` is rejected.
 
 New full backups use the `youyan-workspace-v3` marker to prevent older apps from silently discarding path fields; the current app still imports old v2 backups. Restore with the current version.
 
@@ -116,6 +126,7 @@ With `node server.js` running in another terminal:
 node tests/server.test.cjs
 node tests/textbook-api.test.cjs
 node tests/textbook-wait.test.cjs
+node tests/desktop-transfer.test.cjs
 ```
 
 API tests use mocked responses and a placeholder key, with no paid DeepSeek calls. Browser checks optionally require Playwright for development:
@@ -125,6 +136,8 @@ npm install --no-save --package-lock=false playwright
 npx playwright install chromium
 node tests/workspace-v2.test.cjs
 ```
+
+Native drop integration uses real disk-backed files, an isolated Electron profile and synthetic migration data: run `npm ci`, install Playwright as above, then `node tests/desktop.test.cjs`. This checks real path extraction, no new proof bytes, record/form transfer and persistence, without accessing the user's profile.
 
 `PLAYWRIGHT_PATH` selects a Playwright package, `BROWSER_PATH` a Chromium/Edge executable, and `STUDY_URL` a local address. End-to-end tests use isolated contexts and synthetic evidence; they exercise actual Chinese PDF extraction, course progress, path-only storage, legacy attachment-byte restoration, migration and 24 layouts. Historical v1 UI scripts are not current acceptance tests; see [validation scope](docs/VALIDATION.md).
 

@@ -33,6 +33,10 @@ The shipped exercise PDFs contain original educational text and subset-embedded 
 
 ## Optional tools and external services
 
+The optional desktop entry installs Electron 44.7.2 under its MIT license. Electron bundles Chromium and other components with their own licenses; retain the runtime's `LICENSE` and `LICENSES.chromium.html` when redistributing its binaries. Runtime source and notices: [Electron](https://github.com/electron/electron/tree/v44.7.2). The source repository and portable source ZIP do not bundle the Electron binary or private desktop profile; the launcher downloads the runtime on first use. npm dependency versions and integrity hashes are recorded in `package-lock.json`.
+
+可选桌面入口安装 Electron 44.7.2，适用其 MIT 许可。Chromium 等内置组件另有许可，再分发运行时二进制时须保留其 `LICENSE` 与 `LICENSES.chromium.html`。源码仓库和便携源码包不包含 Electron 二进制或私人桌面配置；首次启动下载运行时，npm 依赖版本及完整性哈希记录在 `package-lock.json`。
+
 PyTorch, scikit-learn, Playwright and PDF-building tools are optional development/practice dependencies, not part of the application's installed runtime. Their upstream licenses apply when installed. DeepSeek or a user-configured compatible school/provider gateway is an external service accessed with the user's credentials; its account terms, billing and privacy policies are independent of this repository's license. Linked papers and courses are references, not republished course contents.
 
 PyTorch、scikit-learn、Playwright、PDF 构建工具为可选开发/实训依赖，不是主应用必装运行包；安装后适用各自上游许可。DeepSeek 或用户配置的学校/服务商接口，其账户、费用与隐私政策独立于项目许可。论文与课程链接仅为参考，不是全文再分发。

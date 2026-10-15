@@ -17,9 +17,13 @@ Browser storage is isolated by scheme, host and port. It is not encrypted by the
 
 浏览器存储按协议、主机、端口隔离。应用不对它加密，具有适当浏览器/主机权限的程序可能读取。没有云同步、账户或服务端用户数据库。本机服务读取应用资源、临时处理生成请求，不持久保存导入的教材、证明或密钥。
 
-New activity evidence stores only path strings. Browser drag-and-drop reads file names, not file bytes; the user supplies the real path. The Windows-only local picker returns paths explicitly selected in its system dialog without opening/copying file contents. There is no directory search or arbitrary file-read/open endpoint. Paths may reveal account names and folder structure, appear in CSV/full backups and should be treated as private records. Originals remain outside the app and are excluded from backups. Legacy copies remain until explicitly removed.
+New activity evidence stores only path strings. Desktop drag-and-drop uses Electron's isolated `webUtils.getPathForFile` bridge to obtain the disk-backed original's path without reading file contents. Browser drops only expose names; its Windows-only local picker returns explicitly selected full paths, with manual entry as a fallback. There is no directory search or arbitrary file-read/open endpoint. Paths may reveal account names and folder structure, appear in CSV/full backups and should be treated as private records. Originals remain outside the app and are excluded from backups. Legacy copies remain until explicitly removed.
 
-新综测证明只保存路径字符串。浏览器拖拽只读取文件名、不读文件字节，由用户补全原路径；Windows 本机选择器只返回系统窗口中明确选中的路径，不打开/复制文件内容。没有目录搜索或任意文件读取/执行接口。路径可能暴露账户名与目录结构，会进入 CSV/完整备份，应按私人记录保管。原文件不进入应用或备份，旧副本在明确移除前保留。
+新综测证明只保存路径字符串。桌面拖拽通过隔离的 Electron `webUtils.getPathForFile` 桥接直接取得磁盘原路径，不读取内容。浏览器拖拽只读文件名，Windows 本机选择器只返回明确选中的完整路径，手动输入为备用。没有目录搜索或任意文件读取/执行接口。路径可能暴露账户名与目录结构，会进入 CSV/完整备份，应按私人记录保管。原文件不进入应用或备份，旧副本在明确移除前保留。
+
+Desktop storage lives in `.desktop-user-data/` beside the project, independently of the ordinary browser. Explicit browser-to-desktop migration sends the full workspace backup and current activity draft to the loopback server, held only in memory for up to two minutes and consumed once by a launched desktop process. No disk transfer file is created. Existing PDF/legacy copy bytes migrate as part of the workspace; new evidence remains path-only. API keys/settings are excluded. The browser copy stays intact; an existing desktop workspace requires backup and confirmation before replacement. Initial runtime installation contacts npm and Electron's distribution service to download software, without sending workspace records. The private profile is ignored by Git and excluded from archives.
+
+桌面存储位于项目旁的 `.desktop-user-data/`，与普通浏览器独立。主动迁移会把完整备份与当前活动草稿发送到本机回环服务，仅在内存暂存最多两分钟，由启动的桌面进程单次接收，不创建中转文件。教材和旧副本字节随工作台迁移，新证明仍仅路径；密钥与连接设置不迁移。浏览器副本保留，替换已有桌面工作台须先备份并确认。首次安装会访问 npm 与 Electron 分发服务下载软件，不发送工作台记录。私人配置目录已排除 Git 与发布包。
 
 ## Explicit generation request / 主动生成请求
 

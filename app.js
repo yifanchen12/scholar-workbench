@@ -150,10 +150,16 @@
     const current=x[ui.counting],diff=ui.target-current, el=$('#draft-status'); el.textContent=diff===0?`正好 ${ui.target} 字，可以开始逐句核对事实。`:diff>0?`距离 ${ui.target} 字还差 ${diff} 字。优先补具体贡献，避免填充空话。`:`超过目标 ${-diff} 字。优先删除重复评价与冗余修饰。`;
     $('#counter-total').classList.toggle('exact',diff===0);$('#counter-total').classList.toggle('over',diff<0);
   }
-  async function fullBackup(){try{await StudyVault.exportBackup(state);toast('完整备份已下载，含教材、证明路径、旧附件与课程进度。');return true;}catch(error){toast(error.message);return false;}}
-  function moduleContext(){return {heading,panelHeader,h,toast,getLegacy:()=>state,fullBackup};}
+  async function fullBackup(){try{if(window.StudyDesktop){if(!await StudyDesktop.saveWorkspaceBackup(await(await StudyVault.backupBlob(state)).text())){toast('已取消备份，当前记录保留。');return false;}}else await StudyVault.exportBackup(state);toast('完整备份已保存，含教材、证明路径、旧附件与课程进度。');return true;}catch(error){toast(error.message);return false;}}
+  async function openDesktop(draft=null){
+    if(location.protocol==='file:')throw new Error('请先运行“启动工作台.cmd”，再点击桌面模式迁移；或使用完整备份导入桌面版。');
+    const backup=JSON.parse(await(await StudyVault.backupBlob(state)).text());
+    const response=await fetch('/api/desktop/open',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({backup,draft})});
+    const result=await response.json();if(!response.ok)throw new Error(result.error||'桌面未能启动，原记录仍保留。');toast('桌面正在打开并接收记录，原网页内容仍保留。');
+  }
+  function moduleContext(){return {heading,panelHeader,h,toast,getLegacy:()=>state,fullBackup,openDesktop};}
   function dataView() {
-    return heading('YOUR DATA, YOUR WORKSPACE','记录、教材与路径，一起备份。','备份包含记录、教材、证明路径与旧附件；路径指向的原文件不包含在内。')+`<div class="data-grid"><section class="panel">${panelHeader('完整备份与恢复')}<div class="panel-body"><p>包括任务、复习、专注、旧经历与草稿、教材PDF与生成展示、课程笔记进度、综测活动、证明路径及旧版存储附件。</p><div class="data-buttons"><button class="button primary" data-action="full-backup">下载完整备份（含附件）</button><button class="button" data-action="full-import">导入完整备份</button></div><p class="source-note">附件总量最多120 MB，教材最多30本，活动最多1,000项。导入前校验全部字段和附件引用，替换前先下载当前完整备份。清除站点数据、更换浏览器或访问地址都可能失去本地数据。</p><div class="notice-box"><strong>API密钥只在页面内存中</strong><p>刷新页面会清除。新证明只记录原路径，文件仍在原位置；旧附件仍在本浏览器。教材生成发送节选或所选章节文字到配置的API，证明不发送。</p></div></div></section><section class="panel">${panelHeader('兼容旧版基础备份')}<div class="panel-body"><p>原有任务、卡片、专注和旧经历备份仍可导入。此格式不包含新教材、课程进度或综测证明路径与附件。</p><div class="data-buttons"><button class="button" data-action="backup">导出基础记录 JSON</button><button class="button" data-action="import">导入旧版基础记录</button>${damagedBackup?'<button class="button" data-action="recover">下载异常原文</button>':''}</div><p>${state.tasks.length}项任务 · ${state.cards.length}张自建卡 · ${state.sessions.length}次专注 · ${state.experiences.length}项旧经历</p><p class="source-note">旧经历会在首次打开综测记录台时迁移。完整备份是新版本迁移的推荐格式。</p></div></section><section class="panel">${panelHeader('新版使用流程')}<div class="panel-body"><ol class="checklist"><li>运行启动工作台.cmd，保持本地服务开启。</li><li>教材学习：导入PDF，在本机填写DeepSeek密钥，生成目录与章节展示。</li><li>AI专业学习：按先修关系学习，下载端到端训练脚本，记录实作验收。</li><li>综测记录台：填写活动、单位、奖级、日期并拖入证明、补全原路径；也可点击拖拽区自动选择原文件。</li><li>下载完整备份，换设备后在相同版本导入。</li></ol><p class="source-note">没有DeepSeek密钥时仍可读取教材、查看已有展示和学习离线课程。扫描PDF需先OCR。AI路线为自编资料，不代表官方培养方案；综测不自动认定分值。</p></div></section><section class="panel">${panelHeader('专注记录')}<div class="panel-body">${state.sessions.length?`<div class="table-scroll"><table class="data-table"><thead><tr><th>时间</th><th>内容</th><th>分钟</th></tr></thead><tbody>${state.sessions.slice(-20).reverse().map(x=>`<tr><td>${h(fmtTime(x.endedAt))}</td><td>${h(x.topic)}</td><td>${x.minutes}</td></tr>`).join('')}</tbody></table></div>`:'<p>尚无已完成专注。</p>'}</div></section></div>`;
+    return heading('YOUR DATA, YOUR WORKSPACE','记录、教材与路径，一起备份。','备份包含记录、教材、证明路径与旧附件；路径指向的原文件不包含在内。')+`<div class="data-grid"><section class="panel">${panelHeader('完整备份与恢复')}<div class="panel-body"><p>包括任务、复习、专注、旧经历与草稿、教材PDF与生成展示、课程笔记进度、综测活动、证明路径及旧版存储附件。</p><div class="data-buttons"><button class="button primary" data-action="full-backup">下载完整备份（含附件）</button><button class="button" data-action="full-import">导入完整备份</button></div><p class="source-note">附件总量最多120 MB，教材最多30本，活动最多1,000项。导入前校验全部字段和附件引用，替换前先下载当前完整备份。清除站点数据、更换浏览器或访问地址都可能失去本地数据。</p><div class="notice-box"><strong>API密钥只在页面内存中</strong><p>刷新页面会清除。新证明只记录原路径，文件仍在原位置；旧附件仍在本浏览器。教材生成发送节选或所选章节文字到配置的API，证明不发送。</p></div></div></section><section class="panel">${panelHeader('兼容旧版基础备份')}<div class="panel-body"><p>原有任务、卡片、专注和旧经历备份仍可导入。此格式不包含新教材、课程进度或综测证明路径与附件。</p><div class="data-buttons"><button class="button" data-action="backup">导出基础记录 JSON</button><button class="button" data-action="import">导入旧版基础记录</button>${damagedBackup?'<button class="button" data-action="recover">下载异常原文</button>':''}</div><p>${state.tasks.length}项任务 · ${state.cards.length}张自建卡 · ${state.sessions.length}次专注 · ${state.experiences.length}项旧经历</p><p class="source-note">旧经历会在首次打开综测记录台时迁移。完整备份是新版本迁移的推荐格式。</p></div></section><section class="panel">${panelHeader('新版使用流程')}<div class="panel-body"><ol class="checklist"><li>运行启动工作台.cmd，保持本地服务开启。</li><li>教材学习：导入PDF，在本机填写DeepSeek密钥，生成目录与章节展示。</li><li>AI专业学习：按先修关系学习，下载端到端训练脚本，记录实作验收。</li><li>综测记录台：启用桌面直接拖入，填写活动信息后拖入原文件，即可自动记录路径。</li><li>下载完整备份，换设备后在相同版本导入。</li></ol><p class="source-note">没有DeepSeek密钥时仍可读取教材、查看已有展示和学习离线课程。扫描PDF需先OCR。AI路线为自编资料，不代表官方培养方案；综测不自动认定分值。</p></div></section><section class="panel">${panelHeader('专注记录')}<div class="panel-body">${state.sessions.length?`<div class="table-scroll"><table class="data-table"><thead><tr><th>时间</th><th>内容</th><th>分钟</th></tr></thead><tbody>${state.sessions.slice(-20).reverse().map(x=>`<tr><td>${h(fmtTime(x.endedAt))}</td><td>${h(x.topic)}</td><td>${x.minutes}</td></tr>`).join('')}</tbody></table></div>`:'<p>尚无已完成专注。</p>'}</div></section></div>`;
   }
   function pdfLink(filename,label,primary=false) {
     const fileMode=location.protocol==='file:';
@@ -167,7 +173,7 @@
     const title=pages.find(([r])=>r===ui.route)[1];$('#page-label').textContent=title; document.title=`${title} · 邮研`;$('#date-label').textContent=new Date().toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'long'});
     $('#quick-add').textContent=ui.route==='review'?'记录错题':ui.route==='materials'?'记录活动':'添加任务';
     $('#main').innerHTML=({today:todayView,logic:()=>StudyTextbook.renderView(moduleContext()),'logic-tools':logicView,ai:()=>StudyCurriculum.renderView(moduleContext()),review:reviewView,materials:()=>StudyRecords.renderView(moduleContext()),data:dataView}[ui.route])();
-    if(ui.route==='materials')StudyRecords.mount();
+    const moduleReady=ui.route==='materials'?StudyRecords.mount():null;
     if(ui.route==='logic')StudyTextbook.mount();
     if(ui.route==='review'){const button=document.createElement('button');button.className='button';button.dataset.action='batch-open';button.textContent='批量录入问答卡';$('#main .card-list-controls').append(button);}
     addEditControls();
@@ -182,6 +188,7 @@
       if(restored && !restored.disabled){restored.focus({preventScroll:true});if(typeof caretStart==='number')try{restored.setSelectionRange(caretStart,caretEnd);}catch{}}
       else if(hadPageFocus && !document.querySelector('dialog[open]'))$('#main').focus({preventScroll:true});
     }
+    return moduleReady;
   }
   function addEditControls() {
     for(const type of ['task','card','experience'])for(const remove of document.querySelectorAll(`[data-action="delete-${type}"]`)){
@@ -303,4 +310,24 @@
   document.addEventListener('visibilitychange',()=>{if(!document.hidden){completeTimer();if(ui.route==='today')render();}});
   setInterval(()=>{if(state.timer?.status==='running')completeTimer();const digits=$('#timer-digits');if(digits)digits.textContent=formatTimer(remaining());},1000);
   render();completeTimer();
+  if(window.StudyDesktop){
+    let taking=false;
+    const receive=async()=>{
+      if(taking)return;taking=true;
+      try{
+        const handoff=await StudyDesktop.takeHandoff();if(!handoff)return;
+        const legacy=readState(JSON.stringify(handoff.backup?.legacy)),data=StudyVault.validateBackup(handoff.backup);
+        const apply=async()=>{
+          const previous=localStorage.getItem(KEY);localStorage.setItem(KEY,JSON.stringify(legacy));
+          try{await StudyVault.replace(data);}catch(error){if(previous===null)localStorage.removeItem(KEY);else localStorage.setItem(KEY,previous);throw error;}
+          state=legacy;ui.route='materials';history.replaceState(null,'','#materials');await render();
+          if(handoff.draft)StudyRecords.restoreDraft(handoff.draft);toast('记录已带入桌面版。现在拖入原文件即可，无需填写路径。');
+        };
+        const existing=await Promise.all(['books','records','progress'].map(StudyVault.all));
+        const meaningful=existing[0].length||existing[1].length||existing[2].some(p=>p.id!=='legacy-migrated')||state.tasks.length||state.cards.length||state.sessions.length||state.experiences.length||state.drafts;
+        if(meaningful)confirmAction('将网页记录带入桌面？','桌面已有记录。先下载当前完整备份，再用网页记录替换；原网页不受影响。',async()=>{try{if(await fullBackup())await apply();}catch(error){toast(error.message);}},'备份并带入');else await apply();
+      }catch(error){toast(error.message);}finally{taking=false;}
+    };
+    StudyDesktop.onHandoff(receive);receive();
+  }
 })();

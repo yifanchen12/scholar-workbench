@@ -16,7 +16,7 @@ PATTERNS = {
     'private key': re.compile(r'-----BEGIN (?:RSA |EC |OPENSSH |DSA )?PRIVATE KEY-----'),
     'local publication path': re.compile(r'(?:[A-Z]:[/\\]+Users[/\\]+[^/\\\s]+[/\\]|E:[/\\]+user[/\\]+Desktop[/\\])'),
 }
-PRIVATE_PARTS = {'.aws', '.codex', '.agents', 'tmp', 'uploads', 'evidence', 'user-data', 'llm-output', '__pycache__', 'node_modules'}
+PRIVATE_PARTS = {'.aws', '.codex', '.agents', 'tmp', 'uploads', 'evidence', 'user-data', '.desktop-user-data', 'llm-output', '__pycache__', 'node_modules'}
 findings = []
 
 

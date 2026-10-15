@@ -36,11 +36,12 @@
   function download(blob,name){const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),2000);}
   async function openFile(key){const file=await get('files',key);if(!file)throw new Error('附件不存在，请从完整备份恢复。');download(file.blob,file.name);}
   function base64(blob){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result.split(',')[1]);reader.onerror=()=>reject(new Error('附件读取失败。'));reader.readAsDataURL(blob);});}
-  async function exportBackup(legacy){
+  async function backupBlob(legacy){
     const [books,records,files,progress]=await Promise.all(STORES.map(all));const total=files.reduce((sum,f)=>sum+f.blob.size,0);if(total>MAX_TOTAL)throw new Error('附件总量超过120 MB，请分别下载原文件，删除不再需要的附件后备份。');
     const encoded=[];for(const file of files)encoded.push({id:file.id,owner:file.owner,name:file.name,type:file.type,size:file.blob.size,data:await base64(file.blob)});
-    const blob=new Blob([JSON.stringify({format:'youyan-workspace-v3',exportedAt:new Date().toISOString(),legacy,books,records,files:encoded,progress})],{type:'application/json'});if(blob.size>256*1024*1024)throw new Error('完整备份超过256 MB，请先下载原文件及展示后整理教材与记录。');download(blob,`邮研完整备份-${StudyCore.dateKey()}.json`);
+    const blob=new Blob([JSON.stringify({format:'youyan-workspace-v3',exportedAt:new Date().toISOString(),legacy,books,records,files:encoded,progress})],{type:'application/json'});if(blob.size>256*1024*1024)throw new Error('完整备份超过256 MB，请先下载原文件及展示后整理教材与记录。');return blob;
   }
+  async function exportBackup(legacy){download(await backupBlob(legacy),`邮研完整备份-${StudyCore.dateKey()}.json`);}
   function validateBackup(input){
     if(!['youyan-workspace-v2','youyan-workspace-v3'].includes(input?.format))throw new Error('请选择邮研完整备份。');
     if(!Array.isArray(input.books)||input.books.length>30||!Array.isArray(input.records)||input.records.length>1000||!Array.isArray(input.files)||input.files.length>10030||!Array.isArray(input.progress)||input.progress.length>200)throw new Error('备份数据量或结构无效。');
@@ -56,5 +57,5 @@
     return {books,records,files,progress};
   }
   async function replace(data){await transaction(STORES,'readwrite',tx=>{for(const name of STORES){const store=tx.objectStore(name);store.clear();for(const value of data[name])store.put(value);}});}
-  root.StudyVault={ready,all,get,put,id,evidencePath,saveRecord,saveBook,deleteOwner,migrate,openFile,download,exportBackup,validateBackup,replace,MAX_TOTAL};
+  root.StudyVault={ready,all,get,put,id,evidencePath,saveRecord,saveBook,deleteOwner,migrate,openFile,download,backupBlob,exportBackup,validateBackup,replace,MAX_TOTAL};
 })(globalThis);

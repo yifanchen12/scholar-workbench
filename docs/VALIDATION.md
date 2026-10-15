@@ -11,6 +11,8 @@
 | `tests/server.test.cjs`, `textbook-api.test.cjs` | Static allowlist, headers, local origin, schema, default/custom Base URL, synthetic gateway transport and rejected redirects / 本机服务、默认/自定义地址、模拟网关与重定向阻断 | Running local server / 已启动服务 |
 | `tests/textbook-wait.test.cjs` | Accelerated application deadlines with delayed real HTTP headers/body; manual cancellation closes upstream / 加速应用定时器、真实 HTTP 慢响应、手动取消断开上游 | Node; isolated synthetic gateway / 隔离的合成网关 |
 | `tests/evidence-picker.test.cjs` | Same-origin path-only picker contract, JSON/body limits, no arbitrary commands and unsupported-platform fallback / 路径选择协议、边界与非 Windows 回退 | Node; synthetic selection, no unattended native dialog / 合成选择，不自动打开系统窗口 |
+| `tests/desktop-transfer.test.cjs` | Origin and one-use capability, duplicate/expired handoff rejection / 来源校验、单次迁移与过期保护 | Node; synthetic payload / 合成数据 |
+| `tests/desktop.test.cjs` | Real disk-backed file dropped through sandboxed Electron bridge; original path without manual entry or copied bytes; browser records/form transfer; reload persistence / 真实磁盘文件原生拖入、无手填或副本、记录草稿迁移与持久化 | Installed Electron, Playwright; isolated test profile / 隔离测试配置 |
 | `tests/launcher.test.cjs` | Windows launcher and port behavior / Windows 启动及端口 | Windows, Node |
 | `tests/workspace-v2.test.cjs` | Real Chinese PDF extraction; course state/tools; memory-only Base URL; dragged path references with no new proof bytes; legacy attachments; CSV safety; path/byte-preserving backup; invalid-input rejection; migration; 24 layouts / PDF、课程、附件、备份、迁移、布局 | Local server, Playwright, Chromium/Edge |
 | `practice/test_math_lab.py` | Standard-library numerical/gradient checks / 标准库数值与梯度 | Python |
@@ -25,9 +27,9 @@ v2 已在 Windows/Edge 本机运行验证，包括真实 CPU 训练。API 验证
 
 ## CI and historical scripts / CI 与历史用例
 
-GitHub Actions runs the dependency-free checks, HTTP/API boundary checks, publication scan and tiny-model invariant tests. This workflow does not run browser layout checks, a paid service call or CUDA/distributed training. Check the actual run status for the current commit rather than assuming a historical pass applies to new code.
+GitHub Actions runs the dependency-free checks, HTTP/API boundary checks, publication scan, a Windows Electron native-drop/migration check and tiny-model invariant tests. This workflow does not run browser layout checks, a paid service call or CUDA/distributed training. Check the actual run status for the current commit rather than assuming a historical pass applies to new code.
 
-GitHub Actions 运行无外部依赖的检查、HTTP/API 边界、公开扫描与小模型不变量；不运行浏览器布局、付费 API 或 CUDA/多卡。以当前提交的实际执行状态为准。
+GitHub Actions 运行无外部依赖的检查、HTTP/API 边界、公开扫描、Windows Electron 原生拖拽/迁移与小模型不变量；不运行浏览器布局、付费 API 或 CUDA/多卡。以当前提交的实际执行状态为准。
 
 Other browser scripts whose assertions refer to the former AI mini-lab/application-material interface are retained as historical v1 cases. Some test names are unchanged for reproducibility; they are not current UI acceptance entries. `tests/V2验证范围.md` provides the older Chinese mapping. Run only relevant supported checks, rather than all historical scripts indiscriminately.
 

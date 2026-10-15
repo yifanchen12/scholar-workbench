@@ -16,6 +16,7 @@ evidence/
 user-data/
 # Development artifacts
 node_modules/
+.desktop-user-data/
 __pycache__/
 *.py[cod]
 .venv/

@@ -1,5 +1,5 @@
 'use strict';
-// Development-only dependency; application runtime needs no npm packages.
+// Development-only driver; browser mode needs no npm packages.
 try {
   module.exports = {playwright: require(process.env.PLAYWRIGHT_PATH || 'playwright')};
 } catch {

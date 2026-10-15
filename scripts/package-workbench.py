@@ -9,10 +9,11 @@ ROOT = Path(__file__).resolve().parent.parent
 OUTPUT = ROOT/'output'
 ROOT_FILES = ['index.html', 'style.css', 'app.js', 'core.js', 'content.js',
               'ai-lab.js', 'metrics-lab.js', 'digits-lab.js', 'digits-model.js', 'logic-practice.js',
-              'logic-circuit.js', 'card-import.js', 'favicon.svg', 'server.js', 'package.json',
+              'logic-circuit.js', 'card-import.js', 'favicon.svg', 'server.js', 'package.json', 'package-lock.json',
               '启动工作台.cmd', 'README.md', 'README.zh-CN.md', 'LICENSE', 'SECURITY.md', 'SECURITY.zh-CN.md', 'evidence-picker.js',
               'CONTRIBUTING.md', 'THIRD_PARTY_NOTICES.md', 'training-run.js','training-lab.js','vault.js',
-              'textbook-schema.js', 'textbook.js', 'deepseek-api.js', 'curriculum-content.js', 'curriculum.js', 'records.js']
+              'textbook-schema.js', 'textbook.js', 'deepseek-api.js', 'curriculum-content.js', 'curriculum.js', 'records.js',
+              'desktop-transfer.js', '启动桌面工作台.cmd']
 EXTENSIONS = {'.html', '.css', '.js', '.cjs', '.svg', '.json', '.md', '.py', '.ipynb', '.pdf', '.png', '.txt'}
 
 
@@ -59,7 +60,7 @@ if __name__ == '__main__':
     complete = [ROOT/name for name in ROOT_FILES]
     complete.append(OUTPUT/'邮研-Python实训包.zip')
     complete.extend(p for p in (ROOT/'vendor').rglob('*') if p.is_file())
-    for folder in ['docs', 'examples', 'output/pdf', 'practice', 'scripts', 'tests']:
+    for folder in ['docs', 'examples', 'output/pdf', 'practice', 'scripts', 'tests', 'desktop']:
         complete.extend(collect(folder))
     results.append(package('邮研-离线学习工作台.zip', complete, '邮研-离线学习工作台'))
     (OUTPUT/'交付包校验.json').write_text(json.dumps(results, ensure_ascii=False, indent=2)+'\n', encoding='utf-8')

@@ -21,7 +21,7 @@
 
 ## 本地启动
 
-要求 **Node.js 18+** 和支持 ES modules、Web Workers、IndexedDB 的现代浏览器。建议使用仍受维护的 Node.js LTS；兼容下限不表示旧版本仍有安全维护。运行主应用无需安装 npm 依赖。
+浏览器模式要求 **Node.js 18+** 和支持 ES modules、Web Workers、IndexedDB 的现代浏览器。建议使用仍受维护的 Node.js LTS；兼容下限不表示旧版本仍有安全维护。浏览器模式无需 npm 依赖；可选桌面入口要求 **Node.js 22.12+** 与锁定版本的 Electron。
 
 ```sh
 git clone https://github.com/yifanchen12/scholar-workbench.git
@@ -39,6 +39,14 @@ node server.js
 ```
 
 固定使用同一入口。`file:`、`localhost`、`127.0.0.1` 和不同端口属于不同浏览器来源，数据不共享。更换地址前导出完整备份。直接打开 HTML 不等价于本地服务模式。服务绑定 `127.0.0.1`，面向个人本机使用，没有公共网络服务或多用户认证。
+
+### 桌面入口：拖入证明，无需填路径
+
+Windows 双击 **`启动桌面工作台.cmd`**。首次启动会通过 npm 安装锁定的桌面依赖并下载 Electron 运行时，请保持网络与安装窗口开启；以后直接使用已安装的运行时。桌面窗口自动启动或复用本机服务。其他系统可运行 `npm ci` 后执行 `npm run desktop`，原生集成目前仅在 Windows 验收。
+
+已有浏览器记录时，点击综测页面或活动表单中的 **“启用直接拖入”**，现有记录与当前未保存的活动表单会自动带入桌面窗口；全新下载请先完成上面的首次安装。原网页数据保留。桌面已有数据时，经确认先下载完整备份再替换，不合并记录。此前在浏览器拖入的文件，需要在桌面窗口重新拖入一次，才能取得真实路径。
+
+桌面数据保存在项目目录内的 `.desktop-user-data/`，与普通浏览器独立，已排除 Git 提交及发布包。固定使用同一桌面目录，移动前先导出完整备份。
 
 ## 上传教材与生成展示
 
@@ -85,7 +93,9 @@ python practice/tiny_llm.py all --steps 80 --output practice/llm-output
 
 ## 综测与备份
 
-记录活动、单位、奖级、日期和贡献，拖入文件/照片或点击拖拽区。**新证明只保存原路径，不读取、复制或上传文件内容。** 浏览器拖拽只提供文件名，无法取得真实绝对路径；拖入后请用资源管理器“复制文件地址”（Ctrl+Shift+C）补全路径，也可点击拖拽区，通过本机 Windows 系统选择器自动取得所选文件的完整路径。多份路径一行一个；其他系统可手动粘贴。仅有文件名的待添加项不能保存，`C:\fakepath` 会被拒绝。
+记录活动、单位、奖级、日期和贡献，在**桌面版直接拖入文件/照片，即刻添加**，不用填路径，也不用再点一次添加附件。点击拖拽区也可多选原文件。**新证明只保存原路径，不读取、复制或上传文件内容。** 活动信息填好后保存即可。内存图片没有磁盘原路径，应先在应用外保存为文件。
+
+浏览器模式保留 Windows 系统选择器和折叠的手动路径备用入口；浏览器拖拽只能提供文件名。需要直接拖入请使用桌面版。只有文件名的待添加项不能保存，`C:\fakepath` 会被拒绝。
 
 新完整备份使用 `youyan-workspace-v3` 标记，避免旧程序恢复时静默丢弃路径；当前程序仍可导入旧 v2 备份，请用新版恢复。
 
@@ -116,6 +126,7 @@ python scripts/audit-public.py
 node tests/server.test.cjs
 node tests/textbook-api.test.cjs
 node tests/textbook-wait.test.cjs
+node tests/desktop-transfer.test.cjs
 ```
 
 API 检查使用模拟响应与占位密钥，不产生付费调用。浏览器检查可按需安装 Playwright（仅开发用途）：
@@ -125,6 +136,8 @@ npm install --no-save --package-lock=false playwright
 npx playwright install chromium
 node tests/workspace-v2.test.cjs
 ```
+
+原生拖拽集成使用真实磁盘文件、隔离 Electron 配置与合成迁移数据：运行 `npm ci`，按上文安装 Playwright 后执行 `node tests/desktop.test.cjs`。检查真实路径提取、不新增证明字节、记录/表单迁移和持久化，不访问使用者的实际配置。
 
 `PLAYWRIGHT_PATH` 指定 Playwright 包，`BROWSER_PATH` 指定 Chromium/Edge 程序，`STUDY_URL` 指定本机地址。端到端检查用隔离浏览器上下文、合成活动与附件，覆盖真实中文 PDF、课程进度、路径不复制存储、旧附件字节恢复、旧数据迁移和 24 个布局。历史 v1 UI 用例不作为新版验收入口，见 [验证范围](docs/VALIDATION.md)。
 
