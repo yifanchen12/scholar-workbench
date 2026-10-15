@@ -7,7 +7,7 @@ This describes the repository's implementation, not a provider's privacy contrac
 | Data / 数据 | Location / 位置 | External transfer / 对外发送 |
 | --- | --- | --- |
 | Tasks, cards, sessions, legacy experiences/drafts / 基础记录 | Browser localStorage, `youyan.study.v1` | No application upload / 应用不上传 |
-| Books, extracted text, generated lessons, activity records/files, course progress/notes / 教材、综测与课程数据 | Browser IndexedDB, `youyan.workspace.v2` | Only the requested textbook text/metadata below / 仅下述请求的教材文字与元数据 |
+| Books, extracted text, generated lessons, activity records/paths, legacy copies, course progress/notes / 教材、综测路径、旧副本与课程数据 | Browser IndexedDB, `youyan.workspace.v2` | Only the requested textbook text/metadata below / 仅下述请求的教材文字与元数据 |
 | Base URL, model and API key / 连接信息与密钥 | Page memory, request, Node process during call / 页面及调用过程内存 | User-selected API; HTTPS preferred, HTTP allowed / 用户指定 API，优先 HTTPS，也允许 HTTP |
 | Imported training report / 导入训练报告 | Page memory / 页面内存 | None / 不发送 |
 | Python outputs / Python 输出 | Local files under the selected output directory / 指定目录的本机文件 | No script upload / 脚本不上传 |
@@ -16,6 +16,10 @@ This describes the repository's implementation, not a provider's privacy contrac
 Browser storage is isolated by scheme, host and port. It is not encrypted by the application and is accessible to code running with appropriate browser/host privileges. There is no cloud sync, account or server-side user database. The local server reads application assets and temporarily handles generation requests; it does not persist imported books, proof files or keys.
 
 浏览器存储按协议、主机、端口隔离。应用不对它加密，具有适当浏览器/主机权限的程序可能读取。没有云同步、账户或服务端用户数据库。本机服务读取应用资源、临时处理生成请求，不持久保存导入的教材、证明或密钥。
+
+New activity evidence stores only path strings. Browser drag-and-drop reads file names, not file bytes; the user supplies the real path. The Windows-only local picker returns paths explicitly selected in its system dialog without opening/copying file contents. There is no directory search or arbitrary file-read/open endpoint. Paths may reveal account names and folder structure, appear in CSV/full backups and should be treated as private records. Originals remain outside the app and are excluded from backups. Legacy copies remain until explicitly removed.
+
+新综测证明只保存路径字符串。浏览器拖拽只读取文件名、不读文件字节，由用户补全原路径；Windows 本机选择器只返回系统窗口中明确选中的路径，不打开/复制文件内容。没有目录搜索或任意文件读取/执行接口。路径可能暴露账户名与目录结构，会进入 CSV/完整备份，应按私人记录保管。原文件不进入应用或备份，旧副本在明确移除前保留。
 
 ## Explicit generation request / 主动生成请求
 
@@ -43,9 +47,9 @@ The shipped application has no analytics SDK or remote script loading. Ordinary 
 
 ## Backup, removal and repository publication / 备份、删除与公开仓库
 
-Full backups can contain student identity, awards, copyrighted text and private photos if you imported them. Base64 merely encodes bytes. Keep backups outside public repositories and revoke sharing links when appropriate. The importer validates structure before replacing data, but does not sanitize the private meaning of valid contents.
+Full backups can contain student identity, awards, original evidence paths, copyrighted text and legacy private photos if previously imported. New path references do not contain target file bytes. Base64 merely encodes bytes. Keep backups outside public repositories and revoke sharing links when appropriate. The importer validates structure before replacing data, but does not sanitize the private meaning of valid contents.
 
-完整备份可能包含用户导入的身份、获奖、教材、私人照片。Base64 只是编码。备份应放在公开仓库之外，必要时撤销分享链接。导入器校验结构，但无法判断有效内容中的隐私。
+完整备份可能包含身份、获奖、原文件路径、教材与旧副本照片，不含新路径指向的原文件字节。Base64 只是编码。备份应放在公开仓库之外，必要时撤销分享链接。导入器校验结构，但无法判断有效内容中的隐私。
 
 Use the module's delete controls to remove a book, activity or attachment. To clear all stored application data, clear the site's data in browser settings for the actual origin. Existing downloaded backups, earlier shares and provider copies remain separate and must be handled separately. A factory reset of basic records is not a secure erase of every storage medium. Deleted bytes may remain in browser/OS backups; there is no forensic-erasure guarantee.
 

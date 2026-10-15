@@ -16,6 +16,7 @@ const server = http.createServer((req,res)=>{
   try { filename = decodeURIComponent(new URL(req.url,'http://127.0.0.1').pathname).slice(1) || 'index.html'; }
   catch { res.writeHead(400);res.end('Bad request');return; }
   if(filename==='api/textbook'){require('./deepseek-api.js').handle(req,res,url);return;}
+  if(filename==='api/evidence/pick'){require('./evidence-picker.js').handle(req,res,url);return;}
   if(req.headers.host!==new URL(url).host){res.writeHead(403);res.end('Invalid host');return;}
   if (!['GET','HEAD'].includes(req.method)) { res.writeHead(405,{'Allow':'GET, HEAD'});res.end('Method not allowed');return; }
   if (!assets.has(filename) && !(filename.startsWith('vendor/pdfjs/') && !filename.split('/').some(s=>s==='..'||s.includes('\\')) && /\.(mjs|bcmap|ttf|pfb|wasm)$/.test(filename))) {res.writeHead(404);res.end('Not found');return;}

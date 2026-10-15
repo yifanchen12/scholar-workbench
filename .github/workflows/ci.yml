@@ -35,6 +35,7 @@ jobs:
           node tests/server.test.cjs
           node tests/textbook-api.test.cjs
           node tests/textbook-wait.test.cjs
+          node tests/evidence-picker.test.cjs
   teaching-model:
     runs-on: ubuntu-latest
     timeout-minutes: 15

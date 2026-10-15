@@ -13,9 +13,9 @@ This independent educational project grew out of university AI study needs. It h
 | PDF learning | Local extraction; generated outlines, concepts, steps, comparisons, charts and quizzes; physical-page citations; Markdown export | Generation requires your own compatible API account (DeepSeek or a school gateway). Scans need external OCR. Verify formulas and answers against the PDF. |
 | AI curriculum | 8 stages, 43 lessons: mathematics/Python, classical ML, deep learning, Transformers, pretraining, post-training, evaluation/RAG/deployment and projects | An authored study path, not a full degree program. Some engineering topics provide explanations and assignments rather than implemented systems. |
 | Training practice | Tiny PyTorch Decoder with pretraining, SFT, LoRA, DPO, comparable evaluation, generation and pretraining resume | CPU teaching scale. Production LLM training, distributed execution and CUDA are not validated. |
-| Activity evidence | Activity, organizer, award level, date, category, contribution and actual document/photo attachments; search, editing, CSV | Evidence tracking without automatic official credit calculation. |
+| Activity evidence | Activity, organizer, award level, date, category, contribution and original document/photo paths; drag/drop, local selection, search, editing, CSV | Evidence tracking without automatic official credit calculation. |
 | Daily tools | Tasks, focus sessions, revision cards, Karnaugh maps, circuits, gradient descent, digit classification and metrics | Assumptions and algorithm boundaries are documented under `docs/`. |
-| Full backup | Original PDFs, text, lessons, course notes/progress, activity files and legacy records | Plaintext JSON with actual file bytes; browser storage is not a backup. |
+| Full backup | Original PDFs, text, lessons, course notes/progress, evidence paths and legacy stored files/records | Plaintext JSON; referenced originals are excluded, while PDFs and legacy stored files retain their bytes. |
 
 ![AI curriculum with no personal records](docs/screenshots-v2/ai-clean.png)
 
@@ -85,9 +85,13 @@ The bundled example is an actual CPU run. **Low loss is not general capability. 
 
 ## Records, limits and backups
 
-Record activity, organizer, award, date and your contribution, with real documents/photos. Photos have local previews; other files can be downloaded, and uploaded documents are not executed. CSV exports fields; full backups include attachment bytes. Leave unknown information blank and consult official rules for credit decisions.
+Record activity, organizer, award, date and your contribution, then drag in documents/photos or click the drop zone. **New evidence saves only original file paths, without copying, uploading or reading file contents.** Browser drops expose filenames, not real absolute paths: paste each original path using Windows “Copy as path” (Ctrl+Shift+C), or click the drop zone to choose original files through the local Windows system dialog. Multiple pasted paths use one line per file. On other platforms, use manual path entry. A pending filename without a complete path cannot be saved; `C:\fakepath` is rejected.
 
-Limits: 50 MiB/1,000 pages per PDF, 30 books, 1,000 activities, 10 attachments per activity at 20 MiB each, 120 MiB total file bytes and 256 MiB per imported backup. Browser quotas may be smaller.
+New full backups use the `youyan-workspace-v3` marker to prevent older apps from silently discarding path fields; the current app still imports old v2 backups. Restore with the current version.
+
+Cards display paths with a copy button. Moving/deleting an original requires updating its reference; deleting a reference/activity never deletes original files. CSV and full backups include path strings, **not referenced file bytes**. Keep original evidence separately when moving computers. Previously stored attachment copies remain readable, downloadable and backed up until explicitly removed; their original paths cannot be reconstructed from file names. Leave unknown award information blank and consult official credit rules.
+
+Limits: 50 MiB/1,000 pages per PDF, 30 books, 1,000 activities, 10 evidence references/legacy attachments per activity; the old 20 MiB attachment limit applies only to legacy copies. PDFs plus legacy stored files have a 120 MiB total limit. Imported backups are limited to 256 MiB. Browser quotas may be smaller.
 
 Export before moving devices, clearing site data or substantial editing. Backups are plaintext JSON: **Base64 is not encryption**. Check their source and save the current backup before replacement. Private browsing, site-data deletion and storage failure can cause loss. Concurrent windows have no conflict merge. Legacy experiences/drafts migrate without inventing missing dates, organizers or awards.
 
@@ -122,7 +126,7 @@ npx playwright install chromium
 node tests/workspace-v2.test.cjs
 ```
 
-`PLAYWRIGHT_PATH` selects a Playwright package, `BROWSER_PATH` a Chromium/Edge executable, and `STUDY_URL` a local address. End-to-end tests use isolated contexts and synthetic evidence; they exercise actual Chinese PDF extraction, course progress, attachment-byte restoration, migration and 24 layouts. Historical v1 UI scripts are not current acceptance tests; see [validation scope](docs/VALIDATION.md).
+`PLAYWRIGHT_PATH` selects a Playwright package, `BROWSER_PATH` a Chromium/Edge executable, and `STUDY_URL` a local address. End-to-end tests use isolated contexts and synthetic evidence; they exercise actual Chinese PDF extraction, course progress, path-only storage, legacy attachment-byte restoration, migration and 24 layouts. Historical v1 UI scripts are not current acceptance tests; see [validation scope](docs/VALIDATION.md).
 
 Build portable archives with `python scripts/package-workbench.py`, then verify a fresh extraction with `python scripts/verify-release.py`. The main ZIP is generated and excluded from Git; the smaller Python practice download used by the interface is included.
 
@@ -132,7 +136,7 @@ Build portable archives with `python scripts/package-workbench.py`, then verify 
 server.js / deepseek-api.js       Loopback server and configurable API proxy
 textbook*.js / vendor/pdfjs/      PDF extraction, validation and display
 curriculum*.js / training*.js    Authored lessons, tools and recorded CPU run
-records.js / vault.js             Activity attachments, persistence and backup
+records.js / vault.js             Evidence paths, legacy files, persistence and backup
 practice/                        Python and PyTorch exercises
 tests/ / scripts/                Verification, packaging and reproducibility
 docs/                            Algorithms, privacy, model card and validation

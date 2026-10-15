@@ -47,3 +47,7 @@ Training checkpoints are intended to be generated locally. The teaching script u
 ## If a credential or private file is exposed
 
 Revoke/rotate the key with the provider immediately; removing it from Git does not invalidate it. Remove the exposed content and coordinate history cleanup if necessary. If private evidence is published, restrict/remove access and assess copies already made. Do not post the secret again while reporting the incident.
+
+## Evidence path picker
+
+`POST /api/evidence/pick` requires the exact loopback Host/Origin, JSON with no custom arguments and a 1 KiB body cap. Only one Windows picker is allowed at a time; disconnection aborts its child process. A fixed Windows Forms script is invoked with `execFile`, without shell-interpolating caller data. It returns only explicitly selected full paths and does not read, copy or execute the files. Unsupported platforms use manual path entry. Stored/imported references are inert text and are never automatically opened; `C:\fakepath`, relative paths and control characters are rejected. Existing legacy blob copies are retained until explicitly removed. Removing a reference/activity does not delete the original external file. Path-only backups do not protect the originals from deletion or movement.
