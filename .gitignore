@@ -14,6 +14,8 @@ credentials*.json
 uploads/
 evidence/
 user-data/
+综测活动与附件-*.zip
+.scholar-export-*.tmp
 # Development artifacts
 node_modules/
 .desktop-user-data/

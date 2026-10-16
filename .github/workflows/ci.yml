@@ -45,6 +45,9 @@ jobs:
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: '24'
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: '3.11'
       - name: Install pinned desktop runtime and test driver
         run: |
           npm ci --no-audit --no-fund
@@ -52,6 +55,7 @@ jobs:
       - name: Real native file drop and browser data migration
         run: |
           node tests/desktop-launcher.test.cjs
+          node tests/evidence-export.test.cjs
           node tests/desktop.test.cjs
   teaching-model:
     runs-on: ubuntu-latest

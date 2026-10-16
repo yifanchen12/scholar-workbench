@@ -10,8 +10,18 @@ const port=Number(process.env.STUDY_PORT||5179),origin=`http://127.0.0.1:${port}
 const trusted=url=>{try{const parsed=new URL(url);return parsed.origin===origin&&['/','/index.html'].includes(parsed.pathname);}catch{return false;}};
 const gotLock=app.requestSingleInstanceLock({handoff:pending});
 if(!gotLock){app.quit();}else{
+  let exporting=false;
   const verifySender=event=>{if(!window||event.sender!==window.webContents||event.senderFrame!==window.webContents.mainFrame||!trusted(event.senderFrame.url))throw new Error('Untrusted desktop request');};
   app.on('second-instance',(_event,_argv,_cwd,data)=>{if(typeof data?.handoff==='string'&&data.handoff){pending=data.handoff;window?.webContents.send('study:handoff-ready');}if(window){if(window.isMinimized())window.restore();window.show();window.focus();}});
+  ipcMain.handle('study:export-evidence',async(event,payload)=>{
+    verifySender(event);if(exporting)throw new Error('正在打包附件，请等待当前导出完成。');exporting=true;
+    try{
+      const exporter=require('./evidence-export.cjs');exporter.validate(payload);
+      const result=await dialog.showSaveDialog(window,{title:'导出当前列表 CSV 与对应附件',defaultPath:'综测活动与附件-'+new Date().toISOString().slice(0,10)+'.zip',filters:[{name:'CSV 与附件压缩包',extensions:['zip']}],properties:['showOverwriteConfirmation']});
+      if(result.canceled||!result.filePath)return {saved:false};
+      return await exporter.writeBundle(payload,result.filePath);
+    }finally{exporting=false;}
+  });
   ipcMain.handle('study:save-backup',async(event,json)=>{
     verifySender(event);
     if(typeof json!=='string'||Buffer.byteLength(json)>256*1024*1024)throw new Error('备份内容无效或过大。');

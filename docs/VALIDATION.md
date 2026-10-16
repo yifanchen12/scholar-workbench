@@ -15,6 +15,7 @@
 | `tests/desktop.test.cjs` | Real disk-backed file dropped through sandboxed Electron bridge; original path without manual entry or copied bytes; browser records/form transfer; reload persistence / 真实磁盘文件原生拖入、无手填或副本、记录草稿迁移与持久化 | Installed Electron, Playwright; isolated test profile / 隔离测试配置 |
 | `tests/launcher.test.cjs` | Windows launcher and port behavior / Windows 启动及端口 | Windows, Node |
 | `tests/desktop-launcher.test.cjs` | Actual Windows CMD entry, preserved CRLF, service identity and a visible native window / 真实双击入口、CRLF 字节、本机服务及可见桌面窗口 | Windows, installed Electron; isolated profile / 隔离配置 |
+| `tests/evidence-export.test.cjs`, `tests/check-evidence-bundle.py` | Independent ZIP/CRC/CSV reading; exact original/legacy bytes, duplicate names, missing report, source-overwrite prevention and failure cleanup / 独立解压核对字节、同名文件、缺失、禁止覆盖原件及失败保护 | Node, installed yazl, Python standard library / Python 标准库 |
 | `tests/workspace-v2.test.cjs` | Real Chinese PDF extraction; course state/tools; memory-only Base URL; dragged path references with no new proof bytes; legacy attachments; CSV safety; path/byte-preserving backup; invalid-input rejection; migration; 24 layouts / PDF、课程、附件、备份、迁移、布局 | Local server, Playwright, Chromium/Edge |
 | `practice/test_math_lab.py` | Standard-library numerical/gradient checks / 标准库数值与梯度 | Python |
 | `tests/tiny_llm.test.py` | Causal attention, SFT mask, frozen DPO reference, LoRA invariants, checkpoint equality, exact CPU resume / 训练机制与 CPU 恢复 | Python, PyTorch |

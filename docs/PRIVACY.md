@@ -12,6 +12,7 @@ This describes the repository's implementation, not a provider's privacy contrac
 | Imported training report / 导入训练报告 | Page memory / 页面内存 | None / 不发送 |
 | Python outputs / Python 输出 | Local files under the selected output directory / 指定目录的本机文件 | No script upload / 脚本不上传 |
 | Full backup / 完整备份 | Downloaded plaintext JSON with Base64 file bytes / 下载的明文 JSON | Wherever the user sends the file / 由使用者决定文件去向 |
+| Activity CSV + evidence ZIP / 活动 CSV 与附件 ZIP | User-selected local ZIP with actual originals and legacy bytes / 自选本机 ZIP，包含原文件与旧附件字节 | No application upload; user controls sharing / 应用不上传，用户决定分享 |
 
 Browser storage is isolated by scheme, host and port. It is not encrypted by the application and is accessible to code running with appropriate browser/host privileges. There is no cloud sync, account or server-side user database. The local server reads application assets and temporarily handles generation requests; it does not persist imported books, proof files or keys.
 
@@ -20,6 +21,10 @@ Browser storage is isolated by scheme, host and port. It is not encrypted by the
 New activity evidence stores only path strings. Desktop drag-and-drop uses Electron's isolated `webUtils.getPathForFile` bridge to obtain the disk-backed original's path without reading file contents. Browser drops only expose names; its Windows-only local picker returns explicitly selected full paths, with manual entry as a fallback. There is no directory search or arbitrary file-read/open endpoint. Paths may reveal account names and folder structure, appear in CSV/full backups and should be treated as private records. Originals remain outside the app and are excluded from backups. Legacy copies remain until explicitly removed.
 
 新综测证明只保存路径字符串。桌面拖拽通过隔离的 Electron `webUtils.getPathForFile` 桥接直接取得磁盘原路径，不读取内容。浏览器拖拽只读文件名，Windows 本机选择器只返回明确选中的完整路径，手动输入为备用。没有目录搜索或任意文件读取/执行接口。路径可能暴露账户名与目录结构，会进入 CSV/完整备份，应按私人记录保管。原文件不进入应用或备份，旧副本在明确移除前保留。
+
+**Explicit desktop CSV/evidence export reads the referenced originals and writes their actual bytes, plus referenced legacy attachments, into a user-selected local ZIP.** Each filtered activity has its own folder; the CSV references packaged relative paths. Missing originals are listed with their original positions for repair. This does not add proof copies to IndexedDB or upload evidence. The archive is plaintext and may contain private documents/photos; the user controls any sharing. Full JSON backup behavior remains separate and path-only for new evidence. Browser-only export remains CSV-only.
+
+**主动点击桌面版 CSV 与附件导出时，会读取所引用的原文件，将其真实字节及关联旧附件写入用户选择的本机 ZIP。** 当前筛选活动各有目录，CSV 使用包内相对路径；缺失清单保留原位置便于修复。不在 IndexedDB 新增证明副本，也不上传证明。压缩包未加密，可能含私人文件和照片，分享由使用者决定。完整 JSON 备份是独立功能，对新证明仍只保留路径；浏览器导出仍仅 CSV。
 
 Desktop storage lives in `.desktop-user-data/` beside the project, independently of the ordinary browser. Explicit browser-to-desktop migration sends the full workspace backup and current activity draft to the loopback server, held only in memory for up to two minutes and consumed once by a launched desktop process. No disk transfer file is created. Existing PDF/legacy copy bytes migrate as part of the workspace; new evidence remains path-only. API keys/settings are excluded. The browser copy stays intact; an existing desktop workspace requires backup and confirmation before replacement. Initial runtime installation contacts npm and Electron's distribution service to download software, without sending workspace records. The private profile is ignored by Git and excluded from archives.
 

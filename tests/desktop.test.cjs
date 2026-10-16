@@ -1,5 +1,6 @@
 'use strict';
 const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),{once}=require('node:events');
+const {spawnSync}=require('node:child_process');
 const {_electron}=require('./browser-runtime.cjs').playwright;
 const root=path.resolve(__dirname,'..');fs.mkdirSync(path.join(root,'tmp'),{recursive:true});
 const directory=fs.mkdtempSync(path.join(root,'tmp','desktop-check-'));
@@ -38,6 +39,21 @@ let application;
   await page.reload();await page.locator('.record-card').first().waitFor();assert.equal(await page.locator('.record-card').count(),2);
   assert(await page.evaluate(expected=>document.querySelector('.evidence-reference code')?.textContent===expected,original));
   assert.equal((await fetch(origin+'/api/desktop/handoff',{method:'POST',headers:{'Content-Type':'application/json','X-Study-Handoff':capability},body:'{}'})).status,410);
+  // Export the filtered record with actual originals, duplicate names and one old stored file.
+  fs.mkdirSync(path.join(directory,'other'));const duplicate=path.join(directory,'other','original-photo.png'),missing=path.join(directory,'missing-proof.pdf'),excluded=path.join(directory,'excluded.txt');
+  const duplicateBytes=Buffer.from('different original with same basename'),legacyBytes=Buffer.from('synthetic legacy evidence');fs.writeFileSync(duplicate,duplicateBytes);fs.writeFileSync(excluded,'excluded activity evidence');
+  await page.evaluate(async({original,duplicate,missing,excluded,legacy})=>{
+    const records=await StudyVault.all('records'),record=records.find(item=>item.title==='合成未保存活动');record.evidencePaths=[original,duplicate,missing];record.fileIds=['legacy-export'];await StudyVault.put('records',record);
+    await StudyVault.put('files',{id:'legacy-export',owner:record.id,name:'旧证明.pdf',type:'application/pdf',blob:new Blob([new Uint8Array(legacy)])});
+    const other=records.find(item=>item.id==='existing-record');other.evidencePaths=[excluded];await StudyVault.put('records',other);
+  },{original,duplicate,missing,excluded,legacy:[...legacyBytes]});
+  await page.reload();await page.locator('#record-query').fill('合成未保存活动');
+  await application.evaluate(({dialog})=>{dialog.showSaveDialog=async()=>({canceled:true});});await page.locator('#record-csv').click();await page.waitForFunction(()=>document.querySelector('#record-export-status').textContent==='已取消导出。');
+  const bundle=path.join(directory,'selected-evidence.zip');await application.evaluate(({dialog},destination)=>{dialog.showSaveDialog=async()=>({canceled:false,filePath:destination});},bundle);
+  await page.locator('#record-csv').click();await page.waitForFunction(()=>document.querySelector('#record-export-status').textContent.includes('3份附件；1份缺失'));
+  const expected=path.join(directory,'bundle-expected.json');fs.writeFileSync(expected,JSON.stringify({titles:['合成未保存活动'],contents:[bytes,duplicateBytes,legacyBytes].map(value=>value.toString('base64')),missingNames:['missing-proof.pdf']}));
+  const checked=spawnSync(process.env.STUDY_PYTHON_PATH||'python',[path.join(__dirname,'check-evidence-bundle.py'),bundle,expected],{encoding:'utf8',windowsHide:true});assert.equal(checked.status,0,checked.stderr||checked.error?.message);
+  assert(fs.readFileSync(original).equals(bytes));assert(fs.readFileSync(duplicate).equals(duplicateBytes));assert.equal(await page.evaluate(async()=> (await StudyVault.all('files')).length),1);
   // A subsequent transfer from another route must retain its draft after rendering.
   await page.goto(origin+'/#ai');await page.locator('#course-notes').waitFor();
   assert.equal((await fetch(origin+'/api/desktop/open',{method:'POST',headers:{Origin:origin,'Content-Type':'application/json'},body:JSON.stringify({backup,draft})})).status,202);
@@ -49,5 +65,5 @@ let application;
   await page.locator('#confirm-action').click();
   await page.locator('#record-dialog[open]').waitFor();assert.equal(await page.locator('#record-form [name=title]').inputValue(),draft.fields.title);assert.equal(await page.evaluate(async()=> (await StudyVault.all('records')).length),1);
   assert.equal(JSON.parse(fs.readFileSync(path.join(directory,'before-replacement.json'),'utf8')).records.length,2);
-  console.log('Actual Electron native drop passed: real disk path added without manual input or proof bytes, browser records/draft migrated, reload persistence and one-use handoff verified.');
+  console.log('Actual Electron passed: native drop, migration/backup protection, filtered CSV+ZIP with exact original and legacy bytes, duplicate names, missing report and canceled export.');
 })().catch(error=>{console.error(error.message);process.exitCode=1;}).finally(async()=>{if(application)await application.close();await new Promise(resolve=>{server.close(resolve);server.closeAllConnections?.();});});

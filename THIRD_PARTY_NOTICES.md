@@ -33,6 +33,8 @@ The shipped exercise PDFs contain original educational text and subset-embedded 
 
 ## Optional tools and external services
 
+Desktop evidence ZIP export uses [yazl 3.3.1](https://github.com/thejoshwolfe/yazl) and its `buffer-crc32` dependency, both MIT licensed. Versions and integrity hashes are pinned in `package-lock.json`; upstream license files remain in installed packages. / 桌面附件 ZIP 导出使用 MIT 许可的 yazl 3.3.1 及其 buffer-crc32 依赖，版本和完整性哈希锁定于 `package-lock.json`，安装包保留上游许可。
+
 The optional desktop entry installs Electron 44.7.2 under its MIT license. Electron bundles Chromium and other components with their own licenses; retain the runtime's `LICENSE` and `LICENSES.chromium.html` when redistributing its binaries. Runtime source and notices: [Electron](https://github.com/electron/electron/tree/v44.7.2). The source repository and portable source ZIP do not bundle the Electron binary or private desktop profile; the launcher downloads the runtime on first use. npm dependency versions and integrity hashes are recorded in `package-lock.json`.
 
 可选桌面入口安装 Electron 44.7.2，适用其 MIT 许可。Chromium 等内置组件另有许可，再分发运行时二进制时须保留其 `LICENSE` 与 `LICENSES.chromium.html`。源码仓库和便携源码包不包含 Electron 二进制或私人桌面配置；首次启动下载运行时，npm 依赖版本及完整性哈希记录在 `package-lock.json`。

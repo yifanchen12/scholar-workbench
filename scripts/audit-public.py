@@ -22,7 +22,7 @@ findings = []
 
 def inspect(name, data):
     parts = PurePosixPath(name).parts
-    if any(part in PRIVATE_PARTS for part in parts) or 'docs/plans/' in name or name.endswith(('验收说明.md', '.pt', '.pth', '.pem', '.key')) or PurePosixPath(name).name.startswith('.env'):
+    if any(part in PRIVATE_PARTS for part in parts) or 'docs/plans/' in name or name.endswith(('验收说明.md', '.pt', '.pth', '.pem', '.key')) or PurePosixPath(name).name.startswith(('.env', '综测活动与附件-', '.scholar-export-')):
         findings.append((name, 'excluded/private file'))
     text = data.decode('utf-8', errors='ignore')
     for label, pattern in PATTERNS.items():

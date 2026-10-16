@@ -4,7 +4,7 @@ const root=path.resolve(__dirname,'..');
 const [major,minor]=process.versions.node.split('.').map(Number);
 if(major<22||(major===22&&minor<12)){console.error('桌面入口需要 Node.js 22.12 或更新的受维护版本。');process.exit(1);}
 let executable;
-try{executable=require('electron');}catch{
+try{require.resolve('yazl');executable=require('electron');}catch{
   console.log('首次启动：正在安装桌面运行时，完成后会自动打开。');
   const install=process.platform==='win32'?spawnSync(process.env.ComSpec||'cmd.exe',['/d','/c','npm ci --include=dev --no-audit --no-fund'],{cwd:root,stdio:'inherit',windowsHide:true}):spawnSync('npm',['ci','--include=dev','--no-audit','--no-fund'],{cwd:root,stdio:'inherit'});
   if(install.status!==0){console.error('安装失败，请检查网络后重新双击启动。');process.exit(1);}

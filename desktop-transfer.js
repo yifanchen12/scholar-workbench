@@ -2,7 +2,7 @@
 const crypto=require('node:crypto'),path=require('node:path');
 const {spawn}=require('node:child_process');
 function launchDesktop(capability,origin){
-  let executable;try{executable=process.versions.electron?process.execPath:require('electron');}catch{throw new Error('请先双击“启动桌面工作台.cmd”完成首次安装，再从此处自动迁移记录。');}
+  let executable;try{require.resolve('yazl');executable=process.versions.electron?process.execPath:require('electron');}catch{throw new Error('请先双击“启动桌面工作台.cmd”安装或更新桌面依赖，再从此处自动迁移记录。');}
   return new Promise((resolve,reject)=>{
     const env={...process.env,STUDY_DESKTOP_HANDOFF:capability,STUDY_PORT:new URL(origin).port};delete env.ELECTRON_RUN_AS_NODE;delete env.NODE_OPTIONS;
     const child=spawn(executable,[path.join(__dirname,'desktop/main.cjs')],{cwd:__dirname,env,windowsHide:false,detached:true,stdio:'ignore'});

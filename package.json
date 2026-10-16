@@ -24,6 +24,7 @@
     "url": "https://github.com/yifanchen12/scholar-workbench/issues"
   },
   "devDependencies": {
-    "electron": "44.7.2"
+    "electron": "44.7.2",
+    "yazl": "3.3.1"
   }
 }
