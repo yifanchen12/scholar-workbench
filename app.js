@@ -321,7 +321,7 @@
           const previous=localStorage.getItem(KEY);localStorage.setItem(KEY,JSON.stringify(legacy));
           try{await StudyVault.replace(data);}catch(error){if(previous===null)localStorage.removeItem(KEY);else localStorage.setItem(KEY,previous);throw error;}
           state=legacy;ui.route='materials';history.replaceState(null,'','#materials');await render();
-          if(handoff.draft)StudyRecords.restoreDraft(handoff.draft);toast('记录已带入桌面版。现在拖入原文件即可，无需填写路径。');
+          if(handoff.draft)await StudyRecords.restoreDraft(handoff.draft);toast('记录已带入桌面版。现在拖入原文件即可，无需填写路径。');
         };
         const existing=await Promise.all(['books','records','progress'].map(StudyVault.all));
         const meaningful=existing[0].length||existing[1].length||existing[2].some(p=>p.id!=='legacy-migrated')||state.tasks.length||state.cards.length||state.sessions.length||state.experiences.length||state.drafts;

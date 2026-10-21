@@ -17,6 +17,8 @@ These components and font files keep their own terms; they are not MIT-relicense
 
 ## Optical Recognition of Handwritten Digits
 
+Activity-proof OCR is separate from the teaching digit classifier. It calls the installed Microsoft Windows.Media.Ocr system component through Windows PowerShell and does not redistribute an OCR engine or model. Windows and its optional language components remain subject to Microsoft's terms. Photo recognition does not call a remote AI provider. / 综测证明 OCR 与教学用手写数字分类器独立，调用已安装的微软 Windows.Media.Ocr 与 Windows PowerShell，不再分发识别引擎或模型；Windows 及可选语言组件适用微软条款，照片识别不调用远程 AI 服务。
+
 The browser digit classifier and numerical reference fixtures use/adapt the 8×8 digit samples available through scikit-learn's `load_digits`, sourced from:
 
 **Alpaydin, E. and Kaynak, C. (1998). Optical Recognition of Handwritten Digits. UCI Machine Learning Repository. DOI: [10.24432/C50P49](https://doi.org/10.24432/C50P49).** Dataset license: [Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/).

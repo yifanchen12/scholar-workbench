@@ -24,6 +24,7 @@ jobs:
           node tests/backup-size.test.cjs
           node tests/digits.test.cjs
           node tests/metrics.test.cjs
+          node tests/record-ocr.test.cjs
           python practice/test_math_lab.py
           python scripts/audit-public.py
       - name: HTTP and mocked provider protocol
@@ -57,6 +58,11 @@ jobs:
           node tests/desktop-launcher.test.cjs
           node tests/evidence-export.test.cjs
           node tests/desktop.test.cjs
+          node tests/desktop-photos.test.cjs
+      - name: Browser photo preview, copy and transfer
+        env:
+          BROWSER_PATH: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe
+        run: node tests/photo-browser.test.cjs
   teaching-model:
     runs-on: ubuntu-latest
     timeout-minutes: 15

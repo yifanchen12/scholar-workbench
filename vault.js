@@ -24,11 +24,14 @@
     const evidencePaths=paths.map(evidencePath);if(new Set(evidencePaths).size!==evidencePaths.length)throw new Error('证明路径重复。');
     return {...Object.fromEntries(['id','title','organizer','award','date','category','notes','fileIds'].map(k=>[k,r[k]])),evidencePaths};
   }
-  async function saveRecord(record,remove=[]){
+  async function saveRecord(record,remove=[],copies=[]){
     if(!Array.isArray(remove)||remove.some(key=>!record.fileIds.includes(key)))throw new Error('旧附件移除记录无效。');
-    const clean=checkRecord({...record,fileIds:record.fileIds.filter(x=>!remove.includes(x))});
+    if(!Array.isArray(copies)||copies.length>10)throw new Error('照片副本数量无效。');
+    const added=copies.map(copy=>{if(!copy||typeof copy.name!=='string'||copy.name.length>300||!(copy.blob instanceof Blob)||!copy.blob.size||copy.blob.size>20*1024*1024||!/^image\/(png|jpeg|webp|gif|bmp|avif|svg\+xml)$/.test(copy.blob.type))throw new Error('照片副本需为有效图片，每份最大20 MB。');return {id:id(),owner:record.id,name:copy.name,type:copy.blob.type,blob:copy.blob,kind:'photo-copy',...(copy.sourcePath?{sourcePath:evidencePath(copy.sourcePath)}:{})};});
+    const clean=checkRecord({...record,fileIds:[...record.fileIds.filter(x=>!remove.includes(x)),...added.map(file=>file.id)]});
     const existing=await all('records');if(!existing.some(r=>r.id===clean.id)&&existing.length>=1000)throw new Error('活动最多1,000项，请先导出并整理。');
-    await transaction(['records','files'],'readwrite',tx=>{const fs=tx.objectStore('files');for(const key of remove)fs.delete(key);tx.objectStore('records').put(clean);});return clean;
+    if(added.length&&(await all('files')).filter(file=>!remove.includes(file.id)).reduce((total,file)=>total+file.blob.size,0)+added.reduce((total,file)=>total+file.blob.size,0)>MAX_TOTAL)throw new Error('本地文件总量超过120 MB，请先备份并整理。');
+    await transaction(['records','files'],'readwrite',tx=>{const fs=tx.objectStore('files');for(const key of remove)fs.delete(key);for(const file of added)fs.put(file);tx.objectStore('records').put(clean);});return clean;
   }
   async function deleteOwner(name,owner){const item=await get(name,owner);if(!item)return;await transaction([name,'files'],'readwrite',tx=>{tx.objectStore(name).delete(owner);for(const key of name==='books'?[item.fileId]:item.fileIds)tx.objectStore('files').delete(key);});}
   async function saveBook(book,file){if(file.size>MAX_FILE)throw new Error('教材PDF最大50 MB。');if((await all('files')).reduce((sum,f)=>sum+f.blob.size,0)+file.size>MAX_TOTAL)throw new Error('本地文件总量不能超过120 MB，请先完整备份并整理。');const fileId=id();await transaction(['books','files'],'readwrite',tx=>{tx.objectStore('files').put({id:fileId,owner:book.id,name:file.name.slice(0,300),type:'application/pdf',blob:file});tx.objectStore('books').put({...book,fileId});});}
@@ -38,7 +41,7 @@
   function base64(blob){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result.split(',')[1]);reader.onerror=()=>reject(new Error('附件读取失败。'));reader.readAsDataURL(blob);});}
   async function backupBlob(legacy){
     const [books,records,files,progress]=await Promise.all(STORES.map(all));const total=files.reduce((sum,f)=>sum+f.blob.size,0);if(total>MAX_TOTAL)throw new Error('附件总量超过120 MB，请分别下载原文件，删除不再需要的附件后备份。');
-    const encoded=[];for(const file of files)encoded.push({id:file.id,owner:file.owner,name:file.name,type:file.type,size:file.blob.size,data:await base64(file.blob)});
+    const encoded=[];for(const file of files)encoded.push({id:file.id,owner:file.owner,name:file.name,type:file.type,size:file.blob.size,data:await base64(file.blob),...(file.kind==='photo-copy'?{kind:'photo-copy'}:{}),...(file.sourcePath?{sourcePath:file.sourcePath}:{})});
     const blob=new Blob([JSON.stringify({format:'youyan-workspace-v3',exportedAt:new Date().toISOString(),legacy,books,records,files:encoded,progress})],{type:'application/json'});if(blob.size>256*1024*1024)throw new Error('完整备份超过256 MB，请先下载原文件及展示后整理教材与记录。');return blob;
   }
   async function exportBackup(legacy){download(await backupBlob(legacy),`邮研完整备份-${StudyCore.dateKey()}.json`);}
@@ -46,7 +49,7 @@
     if(!['youyan-workspace-v2','youyan-workspace-v3'].includes(input?.format))throw new Error('请选择邮研完整备份。');
     if(!Array.isArray(input.books)||input.books.length>30||!Array.isArray(input.records)||input.records.length>1000||!Array.isArray(input.files)||input.files.length>10030||!Array.isArray(input.progress)||input.progress.length>200)throw new Error('备份数据量或结构无效。');
     const seen=new Set(),files=[];let total=0;
-    for(const f of input.files){if(!f||! /^[\w-]{1,100}$/.test(f.id)||seen.has(f.id)||typeof f.owner!=='string'||typeof f.name!=='string'||f.name.length>300||typeof f.type!=='string'||f.type.length>100||typeof f.data!=='string'||!Number.isSafeInteger(f.size)||f.size<=0||f.size>MAX_FILE||f.data.length>Math.ceil(MAX_FILE/3)*4||! /^[A-Za-z0-9+/]*={0,2}$/.test(f.data))throw new Error('附件数据无效。');seen.add(f.id);total+=f.size;if(total>MAX_TOTAL)throw new Error('备份附件超过120 MB。');let bytes;try{bytes=Uint8Array.from(atob(f.data),c=>c.charCodeAt(0));}catch{throw new Error('附件编码损坏。');}if(bytes.length!==f.size)throw new Error('附件字节数不匹配。');files.push({id:f.id,owner:f.owner,name:f.name,type:f.type,blob:new Blob([bytes],{type:f.type})});}
+    for(const f of input.files){if(!f||! /^[\w-]{1,100}$/.test(f.id)||seen.has(f.id)||typeof f.owner!=='string'||typeof f.name!=='string'||f.name.length>300||typeof f.type!=='string'||f.type.length>100||typeof f.data!=='string'||!Number.isSafeInteger(f.size)||f.size<=0||f.size>MAX_FILE||f.data.length>Math.ceil(MAX_FILE/3)*4||! /^[A-Za-z0-9+/]*={0,2}$/.test(f.data))throw new Error('附件数据无效。');seen.add(f.id);total+=f.size;if(total>MAX_TOTAL)throw new Error('备份附件超过120 MB。');let bytes;try{bytes=Uint8Array.from(atob(f.data),c=>c.charCodeAt(0));}catch{throw new Error('附件编码损坏。');}if(bytes.length!==f.size)throw new Error('附件字节数不匹配。');files.push({id:f.id,owner:f.owner,name:f.name,type:f.type,blob:new Blob([bytes],{type:f.type}),...(f.kind==='photo-copy'?{kind:'photo-copy'}:{}),...(f.sourcePath!==undefined?{sourcePath:evidencePath(f.sourcePath)}:{})});}
     const records=input.records.map(checkRecord),owners=new Map();
     if(new Set(records.map(r=>r.id)).size!==records.length)throw new Error('记录ID重复。');
     for(const r of records)for(const key of r.fileIds){const f=files.find(f=>f.id===key);if(!f||f.owner!==r.id||owners.has(key)||f.blob.size>20*1024*1024)throw new Error('证明附件引用缺失或冲突。');owners.set(key,r.id);}

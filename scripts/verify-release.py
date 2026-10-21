@@ -37,7 +37,10 @@ extract_checked(ROOT/'output/邮研-离线学习工作台.zip', destination)
 project = destination/'邮研-离线学习工作台'
 manifest = verify_manifest(project)
 assert (project/'output/邮研-Python实训包.zip').is_file()
-for command in [[sys.executable, '-S', 'practice/test_math_lab.py'], ['node', 'tests/core.test.js'], ['node', 'tests/digits.test.cjs'], ['node', 'tests/metrics.test.cjs'], ['node', 'tests/cards.test.cjs'], ['node', 'tests/state-integrity.test.cjs'], ['node', 'tests/backup-size.test.cjs']]:
+assert (project/'desktop/local-ocr.ps1').is_file()
+assert (project/'desktop/evidence-images.cjs').is_file()
+assert (project/'record-ocr.js').is_file()
+for command in [[sys.executable, '-S', 'practice/test_math_lab.py'], ['node', 'tests/core.test.js'], ['node', 'tests/digits.test.cjs'], ['node', 'tests/metrics.test.cjs'], ['node', 'tests/cards.test.cjs'], ['node', 'tests/state-integrity.test.cjs'], ['node', 'tests/backup-size.test.cjs'], ['node', 'tests/record-ocr.test.cjs']]:
     subprocess.run(command, cwd=project, check=True)
 
 # The smaller ZIP must work without files from the main project or site-packages.

@@ -1,5 +1,5 @@
 'use strict';
-const {app,BrowserWindow,ipcMain,shell,dialog}=require('electron');
+const {app,BrowserWindow,ipcMain,shell,dialog,nativeImage}=require('electron');
 const path=require('node:path'),fs=require('node:fs'),http=require('node:http');
 const root=path.resolve(__dirname,'..');
 const profile=process.env.STUDY_DESKTOP_PROFILE||path.join(root,'.desktop-user-data');
@@ -10,9 +10,15 @@ const port=Number(process.env.STUDY_PORT||5179),origin=`http://127.0.0.1:${port}
 const trusted=url=>{try{const parsed=new URL(url);return parsed.origin===origin&&['/','/index.html'].includes(parsed.pathname);}catch{return false;}};
 const gotLock=app.requestSingleInstanceLock({handoff:pending});
 if(!gotLock){app.quit();}else{
-  let exporting=false;
+  let exporting=false,recognizing;
   const verifySender=event=>{if(!window||event.sender!==window.webContents||event.senderFrame!==window.webContents.mainFrame||!trusted(event.senderFrame.url))throw new Error('Untrusted desktop request');};
   app.on('second-instance',(_event,_argv,_cwd,data)=>{if(typeof data?.handoff==='string'&&data.handoff){pending=data.handoff;window?.webContents.send('study:handoff-ready');}if(window){if(window.isMinimized())window.restore();window.show();window.focus();}});
+  ipcMain.handle('study:preview-image',async(event,source)=>{verifySender(event);return require('./evidence-images.cjs').preview(source,nativeImage);});
+  ipcMain.handle('study:ocr-image',async(event,input)=>{
+    verifySender(event);if(recognizing)throw new Error('正在识别一张图片，请稍候。');const controller=new AbortController();recognizing=controller;
+    try{const images=require('./evidence-images.cjs'),data=input?.path?await images.readPhoto(input.path):input?.data;return await images.recognize(data,nativeImage,controller.signal);}finally{if(recognizing===controller)recognizing=null;}
+  });
+  ipcMain.handle('study:cancel-ocr',event=>{verifySender(event);recognizing?.abort();});
   ipcMain.handle('study:export-evidence',async(event,payload)=>{
     verifySender(event);if(exporting)throw new Error('正在打包附件，请等待当前导出完成。');exporting=true;
     try{
@@ -57,5 +63,5 @@ if(!gotLock){app.quit();}else{
     await window.loadURL(origin+'/#materials');
   }).catch(error=>{dialog.showErrorBox('工作台未能启动',error.message);app.quit();});
   app.on('window-all-closed',()=>app.quit());
-  app.on('before-quit',()=>{if(server?.listening){server.close();server.closeAllConnections?.();}});
+  app.on('before-quit',()=>{recognizing?.abort();if(server?.listening){server.close();server.closeAllConnections?.();}});
 }
