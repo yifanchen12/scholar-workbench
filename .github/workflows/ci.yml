@@ -25,6 +25,7 @@ jobs:
           node tests/digits.test.cjs
           node tests/metrics.test.cjs
           node tests/record-ocr.test.cjs
+          node tests/photo-storage.test.cjs
           python practice/test_math_lab.py
           python scripts/audit-public.py
       - name: HTTP and mocked provider protocol
@@ -59,6 +60,7 @@ jobs:
           node tests/evidence-export.test.cjs
           node tests/desktop.test.cjs
           node tests/desktop-photos.test.cjs
+          node tests/desktop-photo-folder.test.cjs
       - name: Browser photo preview, copy and transfer
         env:
           BROWSER_PATH: C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe

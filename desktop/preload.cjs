@@ -9,6 +9,10 @@ if(origin&&location.origin===origin&&['/','/index.html'].includes(location.pathn
     previewEvidence:source=>ipcRenderer.invoke('study:preview-image',source),
     recognizeEvidence:input=>ipcRenderer.invoke('study:ocr-image',input),
     cancelEvidenceOCR:()=>ipcRenderer.invoke('study:cancel-ocr'),
+    getPhotoFolder:()=>ipcRenderer.invoke('study:photo-folder'),
+    choosePhotoFolder:()=>ipcRenderer.invoke('study:choose-photo-folder'),
+    savePhoto:input=>ipcRenderer.invoke('study:save-photo',input),
+    pastePhoto:()=>ipcRenderer.invoke('study:paste-photo'),
     takeHandoff:()=>ipcRenderer.invoke('study:take-handoff'),
     onHandoff:callback=>{ipcRenderer.on('study:handoff-ready',()=>callback());}
   });

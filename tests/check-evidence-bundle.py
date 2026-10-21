@@ -15,6 +15,11 @@ with zipfile.ZipFile(sys.argv[1]) as archive:
     assert all(not PurePosixPath(name).is_absolute() and '..' not in PurePosixPath(name).parts and '\\' not in name for name in names)
     rows = list(csv.DictReader(io.StringIO(archive.read('综测活动记录.csv').decode('utf-8-sig'))))
     assert [row['活动名称'] for row in rows] == expected['titles']
+    assert all('竞赛级别' in row for row in rows)
+    if 'levels' in expected:
+        assert [row['竞赛级别'] for row in rows] == expected['levels']
+    if 'activityLevels' in expected:
+        assert [row['活动级别'] for row in rows] == expected['activityLevels']
     references = [name for row in rows for name in row['附件（包内路径）'].splitlines()]
     assert len(references) == len(set(references))
     assert set(references) == {name for name in names if name.startswith('附件/')}

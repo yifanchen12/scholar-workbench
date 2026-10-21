@@ -12,7 +12,8 @@ function validate(payload){
     if(Object.entries(fields).some(([key,max])=>typeof record?.[key]!=='string'||record[key].length>max)||!record.title.trim()||!/^[\w-]+$/.test(record.id)||ids.has(record.id))throw new Error('导出活动字段无效。');ids.add(record.id);
     const paths=record.evidencePaths||[],fileIds=record.fileIds;
     if(!Array.isArray(paths)||!Array.isArray(fileIds)||paths.length+fileIds.length>10||paths.some(p=>!validPath(p))||fileIds.some(id=>typeof id!=='string'||!/^[\w-]{1,100}$/.test(id)))throw new Error('导出证明引用无效。');
-    return {...Object.fromEntries(Object.keys(fields).map(key=>[key,record[key]])),evidencePaths:paths,fileIds};
+    const taxonomy=require('../record-categories.js'),competitionLevel=taxonomy.competitionLevel(record.competitionLevel),activityLevel=taxonomy.activityLevel(record.activityLevel);if(competitionLevel&&record.category!=='学术创新')throw new Error('竞赛分类与级别不一致。');
+    return {...Object.fromEntries(Object.keys(fields).map(key=>[key,record[key]])),competitionLevel,activityLevel,evidencePaths:paths,fileIds};
   });
   let total=0;const files=new Map(),references=new Set(records.flatMap(record=>record.fileIds));
   for(const file of payload.files){
@@ -39,9 +40,9 @@ async function writeBundle(payload,destination){
       const file=files.get(id);if(!file||file.owner!==record.id){absent.push(file?.name||'旧附件缺失');missing.push({activity:record.title,name:file?.name||id,source:'旧版存储附件',reason:'旧附件缺失或归属不符'});continue;}
       const entry=`${folder}/${String(++ordinal).padStart(2,'0')}-${filename(file.name)}`;entries.push({name:entry,data:Buffer.from(file.data.buffer,file.data.byteOffset,file.data.byteLength)});included.push(entry);
     }
-    rows.push([record.title,record.organizer,record.award,record.date,record.category,record.notes,included.join('\n'),absent.join('\n')]);
+    rows.push([record.title,record.organizer,record.award,record.date,record.category,record.activityLevel,record.competitionLevel,record.notes,included.join('\n'),absent.join('\n')]);
   }
-  const csv='\uFEFF'+[['活动名称','举办单位','获奖等级','日期','分类','备注','附件（包内路径）','缺失附件'],...rows].map(row=>row.map(csvCell).join(',')).join('\r\n');
+  const csv='\uFEFF'+[['活动名称','举办单位','获奖等级','日期','分类','活动级别','竞赛级别','备注','附件（包内路径）','缺失附件'],...rows].map(row=>row.map(csvCell).join(',')).join('\r\n');
   const temporary=path.join(path.dirname(destination),'.scholar-export-'+crypto.randomUUID()+'.tmp'),zip=new(require('yazl').ZipFile)(),streams=new Set();
   zip.on('error',error=>zip.outputStream.destroy(error));
   const writing=pipeline(zip.outputStream,fs.createWriteStream(temporary,{flags:'wx'}));writing.catch(()=>{});

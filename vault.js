@@ -22,7 +22,8 @@
     const paths=r.evidencePaths===undefined?[]:r.evidencePaths;
     if(!Array.isArray(paths)||paths.length+r.fileIds.length>10)throw new Error('每项活动最多10份证明材料。');
     const evidencePaths=paths.map(evidencePath);if(new Set(evidencePaths).size!==evidencePaths.length)throw new Error('证明路径重复。');
-    return {...Object.fromEntries(['id','title','organizer','award','date','category','notes','fileIds'].map(k=>[k,r[k]])),evidencePaths};
+    const competitionLevel=RecordCategories.competitionLevel(r.competitionLevel),activityLevel=RecordCategories.activityLevel(r.activityLevel);if(competitionLevel&&r.category!=='学术创新')throw new Error('S/A+/A/B+/B 竞赛级别用于学术创新类记录。');
+    return {...Object.fromEntries(['id','title','organizer','award','date','category','notes','fileIds'].map(k=>[k,r[k]])),evidencePaths,...(competitionLevel?{competitionLevel}:{}),...(activityLevel?{activityLevel}:{})};
   }
   async function saveRecord(record,remove=[],copies=[]){
     if(!Array.isArray(remove)||remove.some(key=>!record.fileIds.includes(key)))throw new Error('旧附件移除记录无效。');

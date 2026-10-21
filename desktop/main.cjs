@@ -1,5 +1,5 @@
 'use strict';
-const {app,BrowserWindow,ipcMain,shell,dialog,nativeImage}=require('electron');
+const {app,BrowserWindow,ipcMain,shell,dialog,nativeImage,clipboard}=require('electron');
 const path=require('node:path'),fs=require('node:fs'),http=require('node:http');
 const root=path.resolve(__dirname,'..');
 const profile=process.env.STUDY_DESKTOP_PROFILE||path.join(root,'.desktop-user-data');
@@ -12,6 +12,24 @@ const gotLock=app.requestSingleInstanceLock({handoff:pending});
 if(!gotLock){app.quit();}else{
   let exporting=false,recognizing;
   const verifySender=event=>{if(!window||event.sender!==window.webContents||event.senderFrame!==window.webContents.mainFrame||!trusted(event.senderFrame.url))throw new Error('Untrusted desktop request');};
+  const photoStorage=require('./photo-storage.cjs'),photoConfig=path.join(profile,'photo-folder.json');let choosingPhotoFolder;
+  const choosePhotoFolder=()=>choosingPhotoFolder||((choosingPhotoFolder=(async()=>{
+    const previous=await photoStorage.loadFolder(photoConfig),result=await dialog.showOpenDialog(window,{title:'选择照片自动保存文件夹',defaultPath:previous||app.getPath('pictures'),properties:['openDirectory','createDirectory']});
+    return result.canceled||!result.filePaths[0]?previous:photoStorage.setFolder(photoConfig,result.filePaths[0]);
+  })().finally(()=>{choosingPhotoFolder=null;})));
+  const savePhoto=async input=>{
+    const images=require('./evidence-images.cjs');
+    if(!input||typeof input.name!=='string'||input.name.length>300||!Object.hasOwn(photoStorage.types,input.type)||!(input.data instanceof Uint8Array)||!input.data.byteLength||input.data.byteLength>20*1024*1024)throw new Error('照片格式无效或超过20 MB。');
+    if(input.type==='image/svg+xml'){if(!/<svg(?:\s|>)/i.test(Buffer.from(input.data).toString('utf8')))throw new Error('SVG 图片无效。');}else images.imageBytes(input.data,nativeImage,1800);
+    const folder=await photoStorage.loadFolder(photoConfig)||await choosePhotoFolder();if(!folder)return {saved:false};return photoStorage.writePhoto(folder,input);
+  };
+  ipcMain.handle('study:photo-folder',event=>{verifySender(event);return photoStorage.loadFolder(photoConfig);});
+  ipcMain.handle('study:choose-photo-folder',event=>{verifySender(event);return choosePhotoFolder();});
+  ipcMain.handle('study:save-photo',(event,input)=>{verifySender(event);return savePhoto(input);});
+  ipcMain.handle('study:paste-photo',async event=>{
+    verifySender(event);const image=clipboard.readImage();if(image.isEmpty())throw new Error('剪贴板中没有照片，请先复制图片或截图。');const size=image.getSize();if(size.width*size.height>40000000)throw new Error('图片超过4,000万像素，请先缩小。');
+    return savePhoto({name:'剪贴板照片.png',type:'image/png',data:image.toPNG()});
+  });
   app.on('second-instance',(_event,_argv,_cwd,data)=>{if(typeof data?.handoff==='string'&&data.handoff){pending=data.handoff;window?.webContents.send('study:handoff-ready');}if(window){if(window.isMinimized())window.restore();window.show();window.focus();}});
   ipcMain.handle('study:preview-image',async(event,source)=>{verifySender(event);return require('./evidence-images.cjs').preview(source,nativeImage);});
   ipcMain.handle('study:ocr-image',async(event,input)=>{

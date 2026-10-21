@@ -13,8 +13,11 @@
     if(award)result.award=award.slice(0,200);
     const dates=[...text.matchAll(/(20\d{2}|19\d{2})\s*(?:年|[./·•-])\s*(\d{1,2})\s*(?:月|[./·•-])\s*(\d{1,2})\s*日?/g)];
     for(const date of dates.reverse()){const key=`${date[1]}-${date[2].padStart(2,'0')}-${date[3].padStart(2,'0')}`;if(core.validDate(key)){result.date=key;break;}}
-    const category=labelled('分类|活动类别|Category');if(['学习','竞赛','学生工作','体育','志愿服务','科研','其他'].includes(category))result.category=category;
-    else{const subject=result.title||text;if(/志愿|义工|公益服务/.test(subject))result.category='志愿服务';else if(/竞赛|比赛|挑战杯|创新杯|建模/.test(subject))result.category='竞赛';else if(/运动会|体育|篮球|足球|羽毛球|跑步/.test(subject))result.category='体育';else if(/学生会|团支部|班委|学生工作/.test(subject))result.category='学生工作';else if(/科研|论文|研究项目/.test(subject))result.category='科研';}
+    const taxonomy=typeof module==='object'&&module.exports?require('./record-categories.js'):RecordCategories;
+    const category=labelled('分类|活动类别|Category');if(taxonomy.categories.includes(category))result.category=category;
+    else{const subject=result.title||text;if(/学生会|班委|学生工作|任职|团支书|职业素质|职业能力|组织协调|宿舍长/.test(subject))result.category='组织协调能力';else if(/志愿|义工|公益服务|献血|劳动|社会实践|返家乡/.test(subject))result.category='劳动素养';else if(/运动会|体育|篮球|足球|羽毛球|跑步|心理|健康|体测/.test(subject))result.category='身心健康';else if(/文艺|美育|艺术|歌唱|合唱|舞蹈|话剧|观影|音乐|美术|书法/.test(subject))result.category='美育素养';else if(/班会|团日|升旗|思想成长|主题讲座|通报表扬/.test(subject))result.category='思想成长';else if(/学术|科研|论文|专利|研究项目|竞赛|比赛|挑战杯|创新|建模|雏雁|大创/.test(subject))result.category='学术创新';}
+    const eventLevel=labelled('活动级别|Activity level|Event level').replace(/\s/g,'')||((award||'').match(/^(国家级|市级|校级|院级|年级)/)||[])[0];if(taxonomy.activityLevels.includes(eventLevel))result.activityLevel=eventLevel;
+    const level=(labelled('竞赛级别|竞赛档次|Competition (?:tier|level)|Tier')||labelled('活动级别')).toUpperCase().replace(/\s|级/g,'');if(taxonomy.levels.includes(level)&&(!result.category||result.category==='学术创新')){result.category='学术创新';result.competitionLevel=level;}
     const notes=labelled('个人贡献|备注|参与情况|Notes');if(notes)result.notes=notes.slice(0,6000);
     return result;
   }

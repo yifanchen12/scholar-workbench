@@ -12,7 +12,7 @@ ROOT_FILES = ['index.html', 'style.css', 'app.js', 'core.js', 'content.js',
               'logic-circuit.js', 'card-import.js', 'favicon.svg', 'server.js', 'package.json', 'package-lock.json',
               '启动工作台.cmd', 'README.md', 'README.zh-CN.md', 'LICENSE', 'SECURITY.md', 'SECURITY.zh-CN.md', 'evidence-picker.js',
               'CONTRIBUTING.md', 'THIRD_PARTY_NOTICES.md', 'training-run.js','training-lab.js','vault.js',
-              'textbook-schema.js', 'textbook.js', 'deepseek-api.js', 'curriculum-content.js', 'curriculum.js', 'record-ocr.js', 'records.js',
+              'textbook-schema.js', 'textbook.js', 'deepseek-api.js', 'curriculum-content.js', 'curriculum.js', 'record-categories.js', 'record-ocr.js', 'records.js',
               'desktop-transfer.js', '启动桌面工作台.cmd']
 EXTENSIONS = {'.html', '.css', '.js', '.cjs', '.svg', '.json', '.md', '.py', '.ipynb', '.pdf', '.png', '.txt', '.ps1'}
 

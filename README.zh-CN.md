@@ -93,7 +93,9 @@ python practice/tiny_llm.py all --steps 80 --output practice/llm-output
 
 ## 综测与备份
 
-记录活动、单位、奖级、日期和贡献，**直接拖入文件或照片**。桌面版优先记录可读取的原路径，照片显示缩略图并可点击放大；原路径无法预览时，使用拖入的照片预览，并在保存活动时留一份本地副本。浏览器也支持拖入照片并保存副本；非图片的完整原路径仍需桌面选择器或手动填写。证明照片不会发送给教材 API。
+记录活动、单位、奖级、日期和贡献，**直接拖入文件/照片，或 Ctrl+V 粘贴剪贴板图片**。桌面版也可点击“粘贴照片”读取已复制的图片或截图。先选择一次照片保存文件夹，之后添加的照片立即以独立文件名保存，显示缩略图并可放大；首次粘贴时也可提示选目录。取消活动或移除引用保留已存文件，更改目录影响之后添加的照片。尚未设置目录时，原有磁盘照片拖入流程仍可使用。证明不会发送给教材 API。
+
+活动分类采用所提供的**人工智能学院2025级、2025—2026学年综测细则**中的发展素质六项：思想成长、学术创新、身心健康、美育素养、劳动素养、组织协调能力，另保留“其他”。可记录活动级别，学术竞赛另填 S/A+/A/B+/B 级或待确认；支持分类/竞赛级别筛选，CSV、ZIP和完整备份保留字段。编辑旧记录可保留旧分类。文件认定时段为2025-08-21至2026-09-13（含），记录可跨学年保存。**程序负责材料归档，不自动计算或认定综测分数。**
 
 **Windows 桌面版本地 OCR** 会自动识别首张新加入、可预览的照片，也可点击“选图识别并填表”。使用 Windows 已安装的 OCR 语言组件，无需 API 密钥，只填活动表单中的空白项，保留手填内容，不确定的字段留空。可查看和纠正识别原文，核对表单后保存。浏览器可携带当前草稿及照片副本进入桌面版。详见[照片预览与本地 OCR](docs/LOCAL_OCR.md)。
 
@@ -104,6 +106,8 @@ python practice/tiny_llm.py all --steps 80 --output practice/llm-output
 **完整 JSON 备份包含已保存的照片副本、旧附件和路径引用；仅记录路径的原件仍需单独保管或另导出附件 ZIP。** 移动或删除原件会导致预览失效；没有已存副本时，可重新选择照片保存副本，无法仅凭失效路径恢复原文件。删除活动或引用不会删除原件。副本元数据使用现有 v3 备份的可选字段，当前程序仍可导入 v2。未知奖项信息留空，分值以当年官方认定为准。
 
 限制：单个 PDF 50 MiB/1,000 页、最多 30 本；最多 1,000 项活动，每项合计 10 份证明。照片副本和旧附件每份最多 20 MiB，与教材共享 120 MiB 存储上限；预览解码上限 4,000 万像素。导入完整备份上限 256 MiB。浏览器配额可能更小。
+
+指定文件夹自动保存需桌面版。拖入文件保留原始字节，粘贴按钮将剪贴板位图编码为PNG；普通照片只记录新保存路径，不额外占用 IndexedDB 副本。路径预览不支持的格式仍可保存浏览器副本。目录偏好保存在私人桌面配置，不进入工作台备份；活动引用保留已存照片路径。目录中的照片属于外部原件，应单独备份目录或导出附件 ZIP。浏览器支持粘贴/拖入照片存入本浏览器，普通文字粘贴不受影响。
 
 教材 API 面板提供 [bupt-api 校园接口资料](https://github.com/wzekin/bupt-api)和 [BUPTapi-dsh 本机 DSH 接入仓库](https://github.com/yifanchen12/BUPTapi-dsh)。链接仅供查阅，不代表自动发现 Base URL 或对官方大模型服务可用性的保证。
 
@@ -121,6 +125,7 @@ node tests/backup-size.test.cjs
 node tests/digits.test.cjs
 node tests/metrics.test.cjs
 node tests/record-ocr.test.cjs
+node tests/photo-storage.test.cjs
 python practice/test_math_lab.py
 python scripts/audit-public.py
 ```
@@ -143,7 +148,7 @@ node tests/workspace-v2.test.cjs
 node tests/photo-browser.test.cjs
 ```
 
-原生集成使用真实磁盘测试文件、隔离 Electron 配置与合成数据：运行 `npm ci`，按上文安装 Playwright 后，在 Windows 执行 `node tests/desktop.test.cjs` 和 `node tests/desktop-photos.test.cjs`。检查路径提取、预览、组件可用时的本地 OCR、副本回退、记录/草稿迁移、持久化及 ZIP 字节，不访问使用者的实际配置。ZIP 检查需要 Python，可用 `STUDY_PYTHON_PATH` 指定程序。
+原生集成使用真实磁盘测试文件、隔离 Electron 配置与合成数据：运行 `npm ci`，按上文安装 Playwright 后，在 Windows 执行 `node tests/desktop.test.cjs` 、`node tests/desktop-photos.test.cjs` 和 `node tests/desktop-photo-folder.test.cjs`。检查路径提取、预览、组件可用时的本地 OCR、副本回退、记录/草稿迁移、持久化及 ZIP 字节，不访问使用者的实际配置。ZIP 检查需要 Python，可用 `STUDY_PYTHON_PATH` 指定程序。
 
 `PLAYWRIGHT_PATH` 指定 Playwright 包，`BROWSER_PATH` 指定 Chromium/Edge 程序，`STUDY_URL` 指定本机地址。端到端检查用隔离浏览器上下文、合成活动与附件，覆盖真实中文 PDF、课程进度、路径不复制存储、旧附件字节恢复、旧数据迁移和 24 个布局。历史 v1 UI 用例不作为新版验收入口，见 [验证范围](docs/VALIDATION.md)。
 
